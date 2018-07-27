@@ -27,11 +27,11 @@ Cada integrante del equipo debe asumir alguno de los siguientes “roles” (*) 
 Es muy importante que al dividirse/distribuir/repartir el trabajo, lo hagan pensando de manera ágil y no en cascada. Es decir, si una de ustedes está esperando a que otra termine “su parte” para empezar a trabajar, algo anda mal, [¡eso se parece a la organización del trabajo industrial!](https://media.giphy.com/media/OQ872dEsRi8cU/source.gif). Todas son responsables del producto final y todas pueden (y deben) colaborar en el diseño, el desarrollo y la planificación.
 
 ### TIPS:
-Acá puedes encontrar algunos tips para este proyecto : 
-    * Recuerda a nuestras nuevas BFFs, [las historias de usuario](http://jmbeas.es/guias/historias-de-usuario/)
-    * Ten siempre en mente evitar el desperdicio. Por ejemplo: ¿de qué sirve que tengas el prototipo del 100% de un proyecto en              Figma (alta definición) si solamente implementas el 50% del proyecto? El otro 50% del prototipo se podría considerar como desperdicio.
-    * Limitar el trabajo en progreso. Si son 3 personas, procuren no tener más de 3 tareas a la vez en “doing”.
-    * ¿Estás segura de que quieren seguir invirtiendo más minutos de tu vida (que no volverán) en discutir los colores del logotipo? [Aquí hay algo que te puede ayudar a decidir](https://play.google.com/store/apps/details?id=com.flip.war_daddy.flip_coin).
+
+   * Recuerda a nuestras nuevas BFFs, [las historias de usuario](http://jmbeas.es/guias/historias-de-usuario/)
+   * Ten siempre en mente evitar el desperdicio. Por ejemplo: ¿de qué sirve que tengas el prototipo del 100% de un proyecto en              Figma (alta definición) si solamente implementas el 50% del proyecto? El otro 50% del prototipo se podría considerar como desperdicio.
+   * Limitar el trabajo en progreso. Si son 3 personas, procuren no tener más de 3 tareas a la vez en “doing”.
+   * ¿Estás segura de que quieren seguir invirtiendo más minutos de tu vida (que no volverán) en discutir los colores del logotipo? [Aquí hay algo que te puede ayudar a decidir](https://play.google.com/store/apps/details?id=com.flip.war_daddy.flip_coin).
 
 ## Detalles sobre la implementación
 Detalles para que implementes tu proyecto : 
