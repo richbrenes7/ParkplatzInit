@@ -36,19 +36,19 @@ Es muy importante que al dividirse/distribuir/repartir el trabajo, lo hagan pens
 
 ## Detalles sobre la implementación
 Detalles para que implementes tu proyecto : 
-    * La lógica del proyecto debe estar implementada completamente en JavaScript (ES6), HTML y CSS. 
-    * Está permitido usar librerías o frameworks tanto de CSS como de JS, pero no es obligatorio. Elige bien las batallas que quieres luchar.
-    * En este proyecto, no contamos con un boilerplate, por lo que deberás definir la estructura de carpetas y archivos que consideres necesaria, puedes guiarte de los proyectos anteriores. 
-    * Los tests y el setup necesario para ejecutarlos serán hechos enteramente por ti. 
-    *Para armar las interfaces visuales utiliza como base alguna de estas guías de componentes:
-        * [Guía Desktop 1](https://www.figma.com/file/F3aUqpHWOfZsEQifTPIleXo6/material-kit-free)
-        * [Guía Desktop 2](https://www.figma.com/file/S39H0B1LOnaVICIUiApFTfoP/_Style-Guide---Desktop---Style-Guide)
-        * [Guía Mobile 1](https://www.figma.com/file/00VTwmTNvLVaBLkxrMFbT8/Google-Material-Design)
-        * [Guía Mobile 2](https://www.figma.com/file/O2Xraz3mraQHvevNsicMl91V/ejemplos-2)
-    * Guardar la data de los visitantes de forma remota usando [Firebase](https://firebase.google.com/). 
-    * A nivel de arquitectura:
-        * El uso de Firebase implica que debes trabajar bajo una arquitectura serverless. 
-        * Te sugerimos que desacoples el proyecto en componentes y manejo de estados para que trabajes de forma ordenada y facilite la implementación de tus tests. Revisa la [charla](https://www.youtube.com/watch?v=g_BxnUJTUSk) y el [blog post](https://medium.com/laboratoria-developers/arquitectura-de-interfaces-web-parte-1-a41053c2a1f2) de Lupo sobre este tema ;)
+  * La lógica del proyecto debe estar implementada completamente en JavaScript (ES6), HTML y CSS. 
+  * Está permitido usar librerías o frameworks tanto de CSS como de JS, pero no es obligatorio. Elige bien las batallas que quieres luchar.
+  * En este proyecto, no contamos con un boilerplate, por lo que deberás definir la estructura de carpetas y archivos que consideres necesaria, puedes guiarte de los proyectos anteriores. 
+  * Los tests y el setup necesario para ejecutarlos serán hechos enteramente por ti. 
+  * Para armar las interfaces visuales utiliza como base alguna de estas guías de componentes:
+    * [Guía Desktop 1](https://www.figma.com/file/F3aUqpHWOfZsEQifTPIleXo6/material-kit-free)
+    * [Guía Desktop 2](https://www.figma.com/file/S39H0B1LOnaVICIUiApFTfoP/_Style-Guide---Desktop---Style-Guide)
+    * [Guía Mobile 1](https://www.figma.com/file/00VTwmTNvLVaBLkxrMFbT8/Google-Material-Design)
+    * [Guía Mobile 2](https://www.figma.com/file/O2Xraz3mraQHvevNsicMl91V/ejemplos-2)
+  * Guardar la data de los visitantes de forma remota usando [Firebase](https://firebase.google.com/). 
+  * A nivel de arquitectura:
+    * El uso de Firebase implica que debes trabajar bajo una arquitectura serverless. 
+    * Te sugerimos que desacoples el proyecto en componentes y manejo de estados para que trabajes de forma ordenada y facilite la implementación de tus tests. Revisa la [charla](https://www.youtube.com/watch?v=g_BxnUJTUSk) y el [blog post](https://medium.com/laboratoria-developers/arquitectura-de-interfaces-web-parte-1-a41053c2a1f2) de Lupo sobre este tema ;)
 
 ## Tiempo
 Tendrán 3 días para trabajar en este proyecto. Este tiempo es un poco corto para iterar y hacer las ceremonias que usualmente hacemos. Puedes elegir hacer tus sprints o simplemente correr un único sprint con “hitos”. Es decisión del equipo. Lo que sí les recomendamos es asegurar que usan bien los dailys, esto les permitirá hacer “mini” iteraciones cada 24 horas.
