@@ -58,10 +58,10 @@ Los criterios mínimos de aceptación para considerar que has completado este pr
 
 ### Diseño:
 Entregables de diseño :
-    * Haber realizado y documentado (con fotos, videos, aprendizajes, etc.)  al menos 3 entrevistas con usuarios diferentes.
-    * Haber probado de “cliente incógnito” el registro de visitas en WeWork y compararla con tu solución y con la referencia que te brindaron ([Envoy](https://envoy.com/)).
-    * Entregar un prototipo clickeable de alta fidelidad hecho en [Figma](https://www.figma.com/) u otro editor gráfico como Illustrator, Photoshop, PowerPoint, Keynote, etc. linkeado con [Marvel](https://marvelapp.com/) / [Invision](https://www.invisionapp.com/).
-    * Haber hecho y documentado (con fotos, videos, aprendizajes, lista de cambios realizados, etc.) sesiones de testing del prototipo con usuarios.
+  * Haber realizado y documentado (con fotos, videos, aprendizajes, etc.)  al menos 3 entrevistas con usuarios diferentes.
+  * Haber probado de “cliente incógnito” el registro de visitas en WeWork y compararla con tu solución y con la referencia que te brindaron ([Envoy](https://envoy.com/)).
+  * Entregar un prototipo clickeable de alta fidelidad hecho en [Figma](https://www.figma.com/) u otro editor gráfico como Illustrator, Photoshop, PowerPoint, Keynote, etc. linkeado con [Marvel](https://marvelapp.com/) / [Invision](https://www.invisionapp.com/).
+  * Haber hecho y documentado (con fotos, videos, aprendizajes, lista de cambios realizados, etc.) sesiones de testing del prototipo con usuarios.
 
 ### Implementación:
   * Tu producto final debe estar desplegado en la web y, como mínimo, debe:
