@@ -50,7 +50,7 @@ Detalles para que implementes tu proyecto :
         * Te sugerimos que desacoples el proyecto en componentes y manejo de estados para que trabajes de forma ordenada y facilite la implementación de tus tests. Revisa la [charla](https://www.youtube.com/watch?v=g_BxnUJTUSk) y el [blog post](https://medium.com/laboratoria-developers/arquitectura-de-interfaces-web-parte-1-a41053c2a1f2) de Lupo sobre este tema ;)
 
 ## Tiempo
-Tendrán 1 semana para trabajar en este proyecto. Este tiempo es un poco corto para iterar y hacer las ceremonias que usualmente hacemos. Puedes elegir hacer tus sprints o simplemente correr un único sprint con “hitos”. Es decisión del equipo. Lo que sí les recomendamos es asegurar que usan bien los dailys, esto les permitirá hacer “mini” iteraciones cada 24 horas.
+Tendrán 3 días para trabajar en este proyecto. Este tiempo es un poco corto para iterar y hacer las ceremonias que usualmente hacemos. Puedes elegir hacer tus sprints o simplemente correr un único sprint con “hitos”. Es decisión del equipo. Lo que sí les recomendamos es asegurar que usan bien los dailys, esto les permitirá hacer “mini” iteraciones cada 24 horas.
 
 ## Entregables obligatorios
 Los criterios mínimos de aceptación para considerar que has completado este proyecto son:
