@@ -35,7 +35,6 @@ Es muy importante que al dividirse/distribuir/repartir el trabajo, lo hagan pens
    * ¿Estás segura de que quieren seguir invirtiendo más minutos de tu vida (que no volverán) en discutir los colores del logotipo? [Aquí hay algo que te puede ayudar a decidir](https://play.google.com/store/apps/details?id=com.flip.war_daddy.flip_coin).
 
 ## Detalles sobre la implementación
-Detalles para que implementes tu proyecto : 
   * La lógica del proyecto debe estar implementada completamente en JavaScript (ES6), HTML y CSS. 
   * Está permitido usar librerías o frameworks tanto de CSS como de JS, pero no es obligatorio. Elige bien las batallas que quieres luchar.
   * En este proyecto, no contamos con un boilerplate, por lo que deberás definir la estructura de carpetas y archivos que consideres necesaria, puedes guiarte de los proyectos anteriores. 
