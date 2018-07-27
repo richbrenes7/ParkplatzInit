@@ -7,19 +7,20 @@ En este proyecto la empresa de coworking donde opera Laboratoria en tu ciudad ha
 
 ## Objetivos de aprendizaje
 El objetivo principal de este proyecto es que pongas en práctica todo lo aprendido durante el common core, con foco en la calidad, trabajando en un equipo multifuncional y presentando tu solución a una audiencia.
-Consideraciones generales
+### Consideraciones generales
 Para completar este proyecto deberás trabajar en un equipo de tres y seguir las siguientes consideraciones:
-    * Planificación y organización
-    * Roles, squad multifuncional
+   * Planificación y organización
+   * Roles, squad multifuncional
+   
 Cada integrante del equipo debe asumir alguno de los siguientes “roles” (*) liderando las siguientes áreas de trabajo:
-* Diseñadora UX
-    Diseñar la experiencia de la aplicación (flujo, interacción, etc.).
-    Identificar, documentar y priorizar las historias de usuario.
-    Crear el diseño visual de la interfaz.
-* Desarrolladoras Front-end
-    Implementar la interfaz de usuario diseñada (HTML/CSS/JS).
-    Deben dividirse las funcionalidades entre las dos desarrolladoras.
-    Todas los desarrollos deben incluir pruebas unitarias.
+   * Diseñadora UX
+      Diseñar la experiencia de la aplicación (flujo, interacción, etc.).
+      Identificar, documentar y priorizar las historias de usuario.
+      Crear el diseño visual de la interfaz.
+   * Desarrolladoras Front-end
+      Implementar la interfaz de usuario diseñada (HTML/CSS/JS).
+      Deben dividirse las funcionalidades entre las dos desarrolladoras.
+      Todas los desarrollos deben incluir pruebas unitarias.
 
 *Al no haber rol de Product Manager, las responsabilidades de gestión son compartidas entre todas las integrantes.*
 
