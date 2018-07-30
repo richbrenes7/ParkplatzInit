@@ -6,12 +6,14 @@ window.onload = () => {
 
 // lee datos (inputs) de visitantes
 window.controller.dataInformationVisitor = () => {
-
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   const nameResidentVisitor = document.getElementById('nameResidentVisitor').value;
   const nameVisitor = document.getElementById('nameVisitor').value;
   const rutVisitor = document.getElementById('rutVisitor').value;
   const numCompanionsVisitor = document.getElementById('numCompanionsVisitor').value;
+
+  let snapshotCanvas = document.getElementById('snapshot');
+  let dataURL = snapshotCanvas.toDataURL();
 
   const dataVisitor = {
     date: new Date(),
@@ -20,6 +22,7 @@ window.controller.dataInformationVisitor = () => {
     name: nameVisitor,
     rut: rutVisitor,
     companions: numCompanionsVisitor,
+    image: dataURL
   };
 
   window.data.collectionDataVisitor(dataVisitor);
@@ -89,8 +92,8 @@ window.controller.performCapture = () => {
   captureButton.addEventListener('click', () => {
     let context = snapshot.getContext('2d');
     context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-    let dataURL = snapshotCanvas.toDataURL();
-    console.log('BASE 64:', dataURL);
+    // let dataURL = snapshotCanvas.toDataURL();
+    // console.log('BASE 64:', dataURL);
 
     // Stop all video streams.
     videoTracks.forEach((track) => {
