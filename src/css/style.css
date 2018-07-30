@@ -1,0 +1,40 @@
+.navbar {
+  background-color: #405241;
+}
+
+.fa {
+  color: whitesmoke;
+}
+
+body{
+  background-color: #AACA97;
+}
+
+#data {
+  border-style: outset;
+  border-radius: 2px solid;
+  border-color: gray;
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 70%;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
