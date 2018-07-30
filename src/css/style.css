@@ -6,14 +6,12 @@
   color: whitesmoke;
 }
 
-body{
-  background-color: #AACA97;
+#visitorData, #apartmentNumber{
+  background-color: white;
 }
 
-#data {
-  border-style: outset;
-  border-radius: 2px solid;
-  border-color: gray;
+body{
+  background-color: #AACA97;
 }
 
 input[type=text], select {

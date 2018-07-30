@@ -17,7 +17,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light">
     <a class="navbar-brand p-3" href="#">
-      <i class="fa fa-address-card mr-4" aria-hidden="true"></i> GuardPost</a>
+      <i class="fa fa-address-card mr-4" aria-hidden="true"></i>VisitasApp</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
       aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -37,8 +37,18 @@
       </ul>
     </div>
   </nav>
-  <div id="registry">
-    <div class="container mt-4" id="data">
+  <div class="container mt-2" id="registry">
+
+    <div class="container" id="apartmentNumber">
+      <label for="apartment" class="mt-2">Departamento a visitar</label>
+      <input type="text" id="apartment" placeholder="Ingrese departamento">
+      <p class="mb-0 pb-2" id="residentName">Nombre residente:</p>
+    </div>
+    <div>
+        <input type="submit" class="p-3 mt-2 mb-2 ml-5" onclick="" value="Mostrar residentes">
+      </div>
+
+    <div class="container" id="visitorData">
       <label for="inputName" class="mt-2">Nombre del visitante</label>
       <input type="text" id="inputName" placeholder="Nombre">
 
@@ -47,16 +57,9 @@
 
       <label for="number">Número de acompañantes</label>
       <input type="text" id="number" placeholder="Numero">
-
-      <label for="apartment">Departamento a visitar</label>
-      <select id="apartment">
-        <option value="101">101</option>
-        <option value="102">102</option>
-        <option value="103">103</option>
-      </select>
     </div>
     <div>
-      <input type="submit" class="p-3 mt-5 ml-5" onclick="" value="Agregar">
+      <input type="submit" class="p-3 mt-2 ml-5" onclick="" value="Agregar">
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
