@@ -50,3 +50,17 @@ window.data.getDataResident = (id) => {
     console.log('Error getting document:', error);
   });
 };
+
+
+// obtener colección de visitantes 
+window.data.readCollectionVisitors = () => {
+  const firestore = firebase.firestore();
+  const settings = {
+    timestampsInSnapshots: true
+  };
+  firestore.settings(settings);
+  return firestore.collection('visitors').orderBy('date', 'desc').limit(20).get().then((allVisitors) => {
+    return allVisitors;
+  });
+};
+

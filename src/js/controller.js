@@ -6,15 +6,26 @@ window.controller.dataInformationVisitor = () => {
   const nameResidentVisitor = document.getElementById('nameResidentVisitor').value;
   const nameVisitor = document.getElementById('nameVisitor').value;
   const rutVisitor = document.getElementById('rutVisitor').value;
+  const phoneVisitor = document.getElementById('phoneVisitor').value;
+  const numCompanionsVisitor = document.getElementById('numCompanionsVisitor').value;
 
   const dataVisitor = {
     date: new Date(),
     numberDept: toWhoVisitor,
     nameResident: nameResidentVisitor,
     name: nameVisitor,
-    rut: rutVisitor
+    rut: rutVisitor,
+    phone: phoneVisitor,
+    companions: numCompanionsVisitor
   };
   window.data.collectionDataVisitor(dataVisitor);
+  document.getElementById('toWhoVisitor').value = '';
+  document.getElementById('nameResidentVisitor').value = '';
+  document.getElementById('nameVisitor').value = '';
+  document.getElementById('rutVisitor').value = '';
+  document.getElementById('phoneVisitor').value = '';
+  document.getElementById('numCompanionsVisitor').value = '';
+  window.data.readCollectionVisitors();
 };
 
 
@@ -47,4 +58,10 @@ window.controller.dataInformationResident = () => {
 // escribir nombre residente guardado
 window.controller.completeNameResident = (nameResident) => {
   document.getElementById('nameResidentVisitor').value = nameResident;
+};
+
+
+// comunica data de colleccion de visitantes con escritura
+window.controller.tableCollectionVisitors = () => {
+  return window.data.readCollectionVisitors();
 };
