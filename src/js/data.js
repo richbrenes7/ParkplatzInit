@@ -3,7 +3,7 @@ window.data = {};
 // guardar collección de visitante
 window.data.collectionDataVisitor = (dataVisitor) => {
   const firestore = firebase.firestore();
-  const settings = { /* your settings... */
+  const settings = {
     timestampsInSnapshots: true
   };
   firestore.settings(settings);
@@ -20,7 +20,7 @@ window.data.collectionDataVisitor = (dataVisitor) => {
 // guardar collección de residente
 window.data.collectionDataResident = (dataResident) => {
   const firestore = firebase.firestore();
-  const settings = { /* your settings... */
+  const settings = {
     timestampsInSnapshots: true
   };
   firestore.settings(settings);
@@ -30,9 +30,9 @@ window.data.collectionDataResident = (dataResident) => {
 };
 
 
-// obtener documentos residentes
+// obtener documento residentes
 window.data.getDataResident = (id) => {
-  const firestore = firebase.firestore(); const settings = { /* your settings... */
+  const firestore = firebase.firestore(); const settings = {
     timestampsInSnapshots: true
   };
   firestore.settings(settings);
@@ -42,8 +42,8 @@ window.data.getDataResident = (id) => {
   docRef.get().then((doc) => {
     if (doc.exists) {
       console.log('Document data:', doc.data());
+      window.controller.completeNameResident(doc.data().nameResident);
     } else {
-      // doc.data() will be undefined in this case
       console.log('No such document!');
     }
   }).catch((error) => {

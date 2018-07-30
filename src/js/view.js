@@ -22,4 +22,4 @@ window.view.resident = () => {
     <input id="nameResident" type="text" placeholder="Nombre">
     <input id="emailResident" type="text" placeholder="Correo electronico">
     <button type="button" id="btnDataResident" onclick="window.controller.dataInformationResident()">Guardar</button>`;
-}
+};

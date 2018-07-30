@@ -18,14 +18,14 @@ window.controller.dataInformationVisitor = () => {
 };
 
 
-// busca dato de residentes segun num depto
+// busca dato de residentes según num depto
 window.controller.dataNumberResident = () => {
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   window.data.getDataResident(toWhoVisitor);
 };
 
 
-// lee datos (inputs)  de residentes
+// lee datos (inputs) de residentes
 window.controller.dataInformationResident = () => {
   const numberDeptResident = document.getElementById('numberDeptResident').value;
   const nameResident = document.getElementById('nameResident').value;
@@ -43,3 +43,8 @@ window.controller.dataInformationResident = () => {
   document.getElementById('emailResident').value = '';
 };
 
+
+// escribir nombre residente guardado
+window.controller.completeNameResident = (nameResident) => {
+  document.getElementById('nameResidentVisitor').value = nameResident;
+};
