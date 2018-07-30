@@ -1,13 +1,20 @@
 window.controller = {};
 
+window.onload = () => {
+  window.controller.performCapture();
+};
+
 // lee datos (inputs) de visitantes
 window.controller.dataInformationVisitor = () => {
+  let base64Url = '';
+  console.log(window.controller.photoCapture(base64Url));
+
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   const nameResidentVisitor = document.getElementById('nameResidentVisitor').value;
   const nameVisitor = document.getElementById('nameVisitor').value;
   const rutVisitor = document.getElementById('rutVisitor').value;
-  const phoneVisitor = document.getElementById('phoneVisitor').value;
   const numCompanionsVisitor = document.getElementById('numCompanionsVisitor').value;
+  base64Url = window.controller.photoCapture(base64Url);
 
   const dataVisitor = {
     date: new Date(),
@@ -15,16 +22,18 @@ window.controller.dataInformationVisitor = () => {
     nameResident: nameResidentVisitor,
     name: nameVisitor,
     rut: rutVisitor,
-    phone: phoneVisitor,
-    companions: numCompanionsVisitor
+    companions: numCompanionsVisitor,
+    base64Url: base64Url
   };
+
   window.data.collectionDataVisitor(dataVisitor);
+
   document.getElementById('toWhoVisitor').value = '';
   document.getElementById('nameResidentVisitor').value = '';
   document.getElementById('nameVisitor').value = '';
   document.getElementById('rutVisitor').value = '';
-  document.getElementById('phoneVisitor').value = '';
   document.getElementById('numCompanionsVisitor').value = '';
+
   window.data.readCollectionVisitors();
 };
 
@@ -64,4 +73,40 @@ window.controller.completeNameResident = (nameResident) => {
 // comunica data de colleccion de visitantes con escritura
 window.controller.tableCollectionVisitors = () => {
   return window.data.readCollectionVisitors();
+};
+
+
+// realizar captura de foto
+window.controller.performCapture = () => {
+  let player = document.getElementById('player');
+  let snapshotCanvas = document.getElementById('snapshot');
+  let captureButton = document.getElementById('capture');
+  let newCapture = document.getElementById('newCapture');
+  let videoTracks;
+
+  let handleSuccess = (stream) => {
+    // Attach the video stream to the video element and autoplay.
+    player.srcObject = stream;
+    videoTracks = stream.getVideoTracks();
+  };
+
+  captureButton.addEventListener('click', () => {
+    let context = snapshot.getContext('2d');
+    context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+    let dataURL = snapshotCanvas.toDataURL();
+    console.log('BASE 64:', dataURL);
+
+    // Stop all video streams.
+    videoTracks.forEach((track) => {
+      track.stop();
+    });
+  });
+
+  newCapture.addEventListener('click', () => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(handleSuccess);
+  });
+
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(handleSuccess);
 };

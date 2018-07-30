@@ -39,7 +39,6 @@ window.view.listVisitors = () => {
         <th>Hora</th>
         <th>Acompañantes</th>
         <th>Rut</th>
-        <th>Telefono</th>
       </tr>`;
   const allVisitors = window.controller.tableCollectionVisitors();
   allVisitors.then(visitors => {
@@ -61,7 +60,7 @@ window.view.listVisitors = () => {
         hour: 'numeric',
         minute: 'numeric'
       };
-      let hour = dateFormat.toLocaleDateString('es-CL', optionsHour);
+      let hour = dateFormat.toLocaleTimeString('es-CL', optionsHour);
 
 
       htmlListVisitors +=
@@ -73,14 +72,10 @@ window.view.listVisitors = () => {
           <td>${hour}</td>
           <td>${vis.companions}</td>
           <td>${vis.rut}</td>
-          <td>${vis.phone}</td>
         </tr>`;
     });
     let divListVisitors = document.getElementById('container');
     divListVisitors.innerHTML = htmlListVisitors + '</table>';
   });
-  console.log(htmlListVisitors);
-
-
 };
 
