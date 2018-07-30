@@ -6,7 +6,6 @@ window.onload = () => {
 
 // lee datos (inputs) de visitantes
 window.controller.dataInformationVisitor = () => {
-  let base64Url = '';
 
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   const nameResidentVisitor = document.getElementById('nameResidentVisitor').value;
@@ -21,7 +20,6 @@ window.controller.dataInformationVisitor = () => {
     name: nameVisitor,
     rut: rutVisitor,
     companions: numCompanionsVisitor,
-    base64Url: base64Url
   };
 
   window.data.collectionDataVisitor(dataVisitor);
