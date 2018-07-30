@@ -18,15 +18,18 @@ Nuestro diseño está orientado a que sea una aplicación de fácil uso e intuit
 ## Diseño
 El primer diseño que propusimos era un poco más orientado a gente que tenía más expertise en el manejo tecnológico, por lo tanto al iterar hicimos algunos cambios mínimos pero que permitían un margen de error mayor.
 El primer Sketch se veía así:
+
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo1.jpg)
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo2.jpg)
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo3.jpg)
 
 Luego de iterar, nuestro diseño final se ve así:
+
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo1.jpg)
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo2.jpg)
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo3.jpg)
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo4.jpg)
+
 Se agregaron algunas herramientas para buscar a los residentes y, lo más importante, al borrar a los visitantes pide una confirmación para no borrar a la gente por accidente.
 
 ## Entrevistas
