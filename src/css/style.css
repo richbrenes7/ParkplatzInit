@@ -6,12 +6,12 @@
   color: whitesmoke;
 }
 
-#visitorPhoto, #visitorData, #apartmentNumber{
+#visitorPhoto, #visitorData, #apartmentNumber {
   background-color: white;
   border-radius: 3px;
 }
 
-body{
+body {
   background-color: #AACA97;
 }
 
@@ -36,4 +36,31 @@ input[type=text] {
 
 .button-photo:hover {
   background-color: #45a049;
+}
+
+@media (min-width: 992px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  }
+  .sidebar-sticky {
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 0px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+.enlacesMenu {
+  /*width: 200px;*/
+  background: transparent;
+  border: none;
+  float: left;
 }
