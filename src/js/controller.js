@@ -7,14 +7,12 @@ window.onload = () => {
 // lee datos (inputs) de visitantes
 window.controller.dataInformationVisitor = () => {
   let base64Url = '';
-  console.log(window.controller.photoCapture(base64Url));
 
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   const nameResidentVisitor = document.getElementById('nameResidentVisitor').value;
   const nameVisitor = document.getElementById('nameVisitor').value;
   const rutVisitor = document.getElementById('rutVisitor').value;
   const numCompanionsVisitor = document.getElementById('numCompanionsVisitor').value;
-  base64Url = window.controller.photoCapture(base64Url);
 
   const dataVisitor = {
     date: new Date(),
