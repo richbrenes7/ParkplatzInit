@@ -5,7 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
   <script>
@@ -21,70 +25,84 @@
     firebase.initializeApp(config);
 
   </script>
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-    crossorigin="anonymous">
-  <!--fontAwesome-->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
-    crossorigin="anonymous">
-  <!--Estilos-->
   <link rel="stylesheet" href="css/style.css">
-  <title>Final Core</title>
 </head>
 
 <body>
-  <div class="container-fluid">
-    <div class="row">
-      <!-- sidebar-->
-      <div class="col-lg-3 navbar-dark bg-dark sidebar sidebar-sticky">
-        <nav class="navbar navbar-expand-lg flex-lg-column">
-          <a class="h3 text-white" href="#">Menú</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav flex-lg-column">
-              <button class="nav-item nav-link enlacesMenu" href="#">Ingresar Residentes</button>
-              <button class="nav-item nav-link enlacesMenu" href="#">Ingresar Visitantes</button>
-              <button class="nav-item nav-link enlacesMenu" onclick="window.view.listVisitors()">Lista de Visitantes</button>
-            </div>
-          </div>
-        </nav>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand p-3" href="#">
+      <i class="fa fa-address-card mr-4" aria-hidden="true"></i>VisitasApp</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active ml-3 mr-3">
+          <a class="nav-link" href="#">Registro</a>
+        </li>
+        <li class="nav-item active ml-3 mr-3">
+          <a class="nav-link" href="#">Opciones</a>
+        </li>
+        <li class="nav-item active ml-3 mr-3">
+          <a class="nav-link" href="#">Salir</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!--Registro del visitante y confirmación del departamento a ingresar-->
+  <div class="container mt-2 mb-2" id="registry">
+    <!--Confirmación del departamento-->
+    <div class="container" id="apartmentNumber">
+      <label for="toWhoVisitor" class="mt-2">Departamento a visitar</label>
+      <input type="text" id="toWhoVisitor" placeholder="Ingrese departamento">
+      <p class="mb-0">Nombre residente: </p>
+      <input id="nameResidentVisitor" type="text" placeholder="Residente">
+    </div>
+    <div>
+      <div class="row justify-content-center">
+        <button class="button-photo p-3 mt-2 mb-2" id="btnSearchResidentVisitor" onclick="window.controller.dataNumberResident()">Mostrar residentes</button>
       </div>
-      <!-- contenido-->
-      <div class="col-lg-9">
-        <h1 class="py-3 text-center display-4">VisitasApp</h1>
-        <div id="container">
-          <input id="toWhoVisitor" type="text" placeholder="Nº Depto">
-          <button type="button" id="btnSearchResidentVisitor" onclick="window.controller.dataNumberResident()">OK</button>
-          <input id="nameResidentVisitor" type="text" placeholder="Nombre a quien visita">
-          <input id="nameVisitor" type="text" placeholder="Nombre">
-          <input id="rutVisitor" type="text" placeholder="Rut">
-          <input id="numCompanionsVisitor" type="text" placeholder="Nº Acompañantes">
+    </div>
+    <!--Foto del visitante-->
+    <div class="container" id="visitorPhoto">
+      <div class="row justify-content-center">
+        <video class="mt-2" id="player" width=320 height=240 autoplay></video>
+        <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240></canvas>
+      </div>
+      <div class="row justify-content-center">
+        <button class="button-photo mr-1" id="capture">Sacar foto</button>
+        <button class="button-photo ml-1" id="newCapture">Otra Foto</button>
+      </div>
+    </div>
+    <!--Datos del visitante-->
+    <div class="container" id="visitorData">
+      <label for="nameVisitor" class="mt-2">Nombre del visitante</label>
+      <input type="text" id="nameVisitor" placeholder="Nombre">
 
-          <video id="player" autoplay></video>
-          <button id="capture">Capture</button>
-          <button id="newCapture">Otra Foto</button>
-          <canvas id="snapshot" width=320 height=240></canvas>
+      <label for="rutVisitor">RUT del visitante</label>
+      <input type="text" id="rutVisitor" placeholder="RUT">
 
-          <button type="button" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Guardar</button>
-        </div>
+      <label for="numCompanionsVisitor">Número de acompañantes</label>
+      <input type="text" id="numCompanionsVisitor" placeholder="Numero">
+    </div>
+    <div>
+      <div class="row justify-content-center">
+        <button class="button-photo p-3 mt-2" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Agregar</button>
       </div>
     </div>
   </div>
-
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
-
   <script src="js/data.js"></script>
   <script src="js/view.js"></script>
   <script src="js/controller.js"></script>
-
 </body>
 
 </html>
