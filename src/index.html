@@ -62,14 +62,15 @@
     </div>
     <div>
       <div class="row justify-content-center">
-        <input type="submit" id="btnSearchResidentVisitor" class="p-3 mt-2 mb-2" onclick="window.controller.dataNumberResident()"
-          value="Mostrar residentes">
+          <button class="button-photo p-3 mt-2 mb-2" id="btnSearchResidentVisitor" onclick="window.controller.dataNumberResident()">Mostrar residentes</button>
       </div>
     </div>
     <!--Foto del visitante-->
     <div class="container" id="visitorPhoto">
-      <video id="player" autoplay></video>
-      <canvas id="snapshot" width=320 height=240></canvas>
+      <div class="row justify-content-center">
+      <video class="mt-2" id="player" autoplay></video>
+      <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240></canvas>
+    </div>
       <div class="row justify-content-center">
         <button class="button-photo mr-1" id="capture">Sacar foto</button>
         <button class="button-photo ml-1" id="newCapture">Otra Foto</button>
@@ -88,8 +89,7 @@
     </div>
     <div>
       <div class="row justify-content-center">
-        <input type="submit" id="btnDataVisitor" class="p-3 mt-2" onclick="window.controller.dataInformationVisitor()"
-          value="Agregar">
+          <button class="button-photo p-3 mt-2" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Agregar</button>
       </div>
     </div>
   </div>
