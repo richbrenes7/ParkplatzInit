@@ -4,7 +4,7 @@ window.view = {};
 window.view.visitor = () => {
   let divVisitor = document.getElementById('container');
   divVisitor.innerHTML =
-  `<input id="toWhoVisitor" type="text" placeholder="Nº Depto">
+    `<input id="toWhoVisitor" type="text" placeholder="Nº Depto">
     <button type="button" id="btnSearchResidentVisitor" onclick="window.controller.dataNumberResident()">OK</button>
       <input id="nameResidentVisitor" type="text" placeholder="Nombre a quien visita">
       <input id="nameVisitor" type="text" placeholder="Nombre">
@@ -19,7 +19,7 @@ window.view.visitor = () => {
 window.view.resident = () => {
   let divResident = document.getElementById('container');
   divResident.innerHTML =
-  `<input id="numberDeptResident" type="text" placeholder="Nº departamento">
+    `<input id="numberDeptResident" type="text" placeholder="Nº departamento">
   <input id="nameResident" type="text" placeholder="Nombre">
   <input id="emailResident" type="text" placeholder="Correo electronico">
   <button type="button" id="btnDataResident" onclick="window.controller.dataInformationResident()">Guardar</button>`;
@@ -29,7 +29,7 @@ window.view.resident = () => {
 // escritura datos visitantes en tabla
 window.view.listVisitors = () => {
   let htmlListVisitors =
-  `<table class="table">
+    `<table class="table">
     <thead class="thead-dark">
       <tr>
         <th scope="col" class="text-center">Depto a visitar</th>
@@ -65,7 +65,7 @@ window.view.listVisitors = () => {
 
 
       htmlListVisitors +=
-      `<tbody>
+        `<tbody>
         <tr>
           <td>${vis.numberDept}</td>
           <td>${vis.nameResident}</td>
@@ -82,7 +82,5 @@ window.view.listVisitors = () => {
     divListVisitors.innerHTML = htmlListVisitors + '</table>';
   });
   console.log(htmlListVisitors);
-
-
 };
 
