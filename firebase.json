@@ -4,7 +4,11 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+<<<<<<< HEAD
     "public": "public",
+=======
+    "public": "src",
+>>>>>>> 23f9db9d54b5da090bb878f84121157790f262c9
     "ignore": [
       "firebase.json",
       "**/.*",
