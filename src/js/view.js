@@ -11,10 +11,11 @@ window.view.visitor = () => {
         <div class="container" id="apartmentNumber">
           <label for="toWhoVisitor" class="mt-2">Departamento a visitar</label>
           <input type="text" id="toWhoVisitor" placeholder="Ingrese departamento">
+          <div id="insertResident"></div>
         </div>
         <div>
           <div class="row justify-content-center">
-            <button class="button-photo p-3 mt-2 mb-2 btn" id="btnSearchResidentVisitor" data-toggle="modal" data-target="#exampleModal" onclick="window.controller.namesResident()">Mostrar residentes</button>
+            <button class="button-photo p-3 mt-2 mb-2 btn" id="btnSearchResidentVisitor" data-toggle="modal" data-target="#exampleModal" onclick="window.container.infoResident()">Mostrar residentes</button>
           </div>
         </div>
         <div id="containerModal"></div>
@@ -110,23 +111,20 @@ window.view.listVisitors = () => {
       <td class="text-center">${vis.rut}</td>
       <td class="text-center">${vis.companions}</td>
       <td class="text-center">${date}</td>
-      <td class="text-center">${hour}</td>
-      <td class="text-center"><button class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${vis.image}')">Ver</button></td>
+      <td class="text-ceninsertResidenter">${hour}</td>
+      <td class="text-ceninsertResidenter"><button class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${vis.image}')">Ver</button></td>
       </tr>
       </tbody>
       `;
     });
-    let divListVisitors = document.getElementById('container');
-    divListVisitors.innerHTML = htmlListVisitors +
+    let divListVisitors = insertResidentdocument.getElementById('container');
+    divListVisitors.innerinsertResidentTML = htmlListVisitors +
       '</table>';
   });
 };
 
-// modal informacion residentes
-
-window.view.infoResidentModal = (dataResident) => {
-  console.log('---', dataResident);
-
+// modal informacion resiinsertResidententes
+window.view.infoResidentMinsertResidentdal = (data) => {
   let modalResident = document.getElementById('containerModal');
   modalResident.innerHTML =
     `<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -176,4 +174,18 @@ window.view.photoVisitModal = (image) => {
   </div>
   </div>
   </div>`;
+};
+
+
+window.view.insertResident = (dataRes) => {
+  let divInsertResident = document.getElementById('insertResident');
+  divInsertResident.innerHTML =
+    `<div class="container">
+  <label for="toWhoVisitor" class="mt-2">Residentes</label>
+  <p><b>Nombre Residente:</b>${dataRes.nameResident}</p>
+  <p><b>Nombre Residente:</b>${dataRes.resident2}</p>
+  <p><b>Nombre Residente:</b>${dataRes.resident3}</p>
+  <p><b>Nombre Residente:</b>${dataRes.resident4}</p>
+</div>
+  `
 };
