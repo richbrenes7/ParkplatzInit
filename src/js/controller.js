@@ -107,8 +107,7 @@ window.controller.performCapture = () => {
 };
 
 
-// lee residentes de un dpto
-window.controller.namesResident = () => {
-  let id = document.getElementById('toWhoVisitor').value;
-  window.data.getDataResident(id);
+// escribo residentes
+window.controller.infoResident = () => {
+  window.data.getDataResident();
 };

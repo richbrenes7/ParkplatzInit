@@ -32,18 +32,21 @@ window.data.collectionDataResident = (dataResident) => {
 
 
 // obtener documento residentes
-window.data.getDataResident = (id) => {
+window.data.getDataResident = () => {
+  let numDepto = document.getElementById('toWhoVisitor').value;
+  console.log(numDepto);
+
   const firestore = firebase.firestore(); const settings = {
     timestampsInSnapshots: true
   };
   firestore.settings(settings);
 
-  let docRef = firestore.collection('resident').doc(id);
+  let docRef = firestore.collection('resident').doc(numDepto);
 
   docRef.get().then((doc) => {
     if (doc.exists) {
       console.log('Document data:', doc.data());
-      window.view.infoResidentModal(doc.data());
+      window.view.insertResident(doc.data());
     } else {
       console.log('No such document!');
     }
