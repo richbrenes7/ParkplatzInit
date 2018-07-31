@@ -1,5 +1,6 @@
 window.data = {};
 
+
 // guardar collección de visitante
 window.data.collectionDataVisitor = (dataVisitor) => {
   const firestore = firebase.firestore();
@@ -41,8 +42,9 @@ window.data.getDataResident = (id) => {
 
   docRef.get().then((doc) => {
     if (doc.exists) {
-      console.log('Document data:', doc.data());
-      window.controller.completeNameResident(doc.data().nameResident);
+      // console.log('Document data:', doc.data());
+
+      window.view.infoResidentModal(doc.data());
     } else {
       console.log('No such document!');
     }
@@ -63,4 +65,3 @@ window.data.readCollectionVisitors = () => {
     return allVisitors;
   });
 };
-

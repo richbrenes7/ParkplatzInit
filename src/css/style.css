@@ -43,6 +43,9 @@ input[type=text] {
 }
 
 @media (min-width: 992px) {
+  body {
+    background-image: url('../img/fondo.jpg');
+  }
   .sidebar {
     position: fixed;
     top: 0;

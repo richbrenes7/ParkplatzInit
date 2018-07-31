@@ -75,12 +75,6 @@ window.controller.dataInformationResident = () => {
 };
 
 
-// escribir nombre residente guardado
-window.controller.completeNameResident = (nameResident) => {
-  document.getElementById('nameResidentVisitor').value = nameResident;
-};
-
-
 // comunica data de colleccion de visitantes con escritura
 window.controller.tableCollectionVisitors = () => {
   return window.data.readCollectionVisitors();
@@ -121,3 +115,4 @@ window.controller.performCapture = () => {
   navigator.mediaDevices.getUserMedia({ video: true })
     .then(handleSuccess);
 };
+
