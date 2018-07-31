@@ -23,13 +23,10 @@ window.view.visitor = () => {
         </div>
         <div id="containerModal"></div>
         <!--Foto del visitante-->
-        <div class="container" id="visitorPhoto">
-          <div class="row justify-content-center containerCamara">
-          <div class="col-8 justtify-contenet-center">
-            <video class="mt-2 col-12" id="player" width=320 height=240 autoplay></video>
-            <canvas class="col-12" id="snapshot" width=320 height=240></canvas>
-          </div>
-          </div>
+        <div class="row justify-content-center">
+            <video class="mt-2" id="player" width=320 height=240 autoplay></video>
+            <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240></canvas>
+        </div>
           <div class="row justify-content-center">
             <button class="mr-1 btn btn-warning text-white" id="capture">Sacar foto</button>
             <button class="ml-1 btn btn-warning text-white" id="newCapture">Otra Foto</button>
