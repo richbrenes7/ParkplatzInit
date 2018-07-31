@@ -7,7 +7,7 @@ window.view.visitor = () => {
   divVisitor.innerHTML =
     `<!--Registro del visitante y confirmación del departamento a ingresar-->
     <div class="row justify-content-center">
-    <div class="col-lg-10 bg-white rounded"> 
+    <div class="col-lg-10 bg-white rounded containerTransparent"> 
     <p class="lead titlePage mt-4">Registro Visitantes</p>
       <div class="container mt-2 mb-2" id="registry">
         <!--Confirmación del departamento-->
@@ -17,19 +17,21 @@ window.view.visitor = () => {
         </div>
         <div>
           <div class="row justify-content-center">
-            <button class="button-photo p-3 mt-2 mb-2 btn btn-warning text-white" id="btnSearchResidentVisitor" data-toggle="modal" data-target="#exampleModal" onclick="window.controller.namesResident()">Mostrar residentes</button>
+            <button class="p-3 mt-2 mb-2 btn btn-warning text-white" id="btnSearchResidentVisitor" data-toggle="modal" data-target="#exampleModal" onclick="window.controller.namesResident()">Mostrar residentes</button>
           </div>
         </div>
         <div id="containerModal"></div>
         <!--Foto del visitante-->
         <div class="container" id="visitorPhoto">
-          <div class="row justify-content-center">
-            <video class="mt-2" id="player" width=320 height=240 autoplay></video>
-            <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240></canvas>
+          <div class="row justify-content-center containerCamara">
+          <div class="col-8 justtify-contenet-center">
+            <video class="mt-2 col-12" id="player" width=320 height=240 autoplay></video>
+            <canvas class="col-12" id="snapshot" width=320 height=240></canvas>
+          </div>
           </div>
           <div class="row justify-content-center">
-            <button class="button-photo mr-1 btn btn-warning text-white" id="capture">Sacar foto</button>
-            <button class="button-photo ml-1 btn btn-warning text-white" id="newCapture">Otra Foto</button>
+            <button class="mr-1 btn btn-warning text-white" id="capture">Sacar foto</button>
+            <button class="ml-1 btn btn-warning text-white" id="newCapture">Otra Foto</button>
           </div>
         </div>
         <!--Datos del visitante-->
@@ -45,7 +47,7 @@ window.view.visitor = () => {
         </div>
         <div>
           <div class="row justify-content-center">
-            <button class="button-photo p-3 mt-2 btn btn-warning text-white" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Agregar</button>
+            <button class=" p-3 mt-2 btn btn-warning text-white" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Agregar</button>
           </div>
         </div>
         </div> 
@@ -59,7 +61,7 @@ window.view.resident = () => {
   let divResident = document.getElementById('container');
   divResident.innerHTML =
     `<div class="row justify-content-center">
-    <div class="bg-white p-4 col-lg-10 rounded">
+    <div class="bg-white p-4 col-lg-10 rounded containerTransparent">
     <p class="lead titlePage mt-4">Registro Visitantes</p>
     <input id="numberDeptResident" type="text" placeholder="Nº departamento">
       <input id="nameResident" type="text" placeholder="Nombre">
@@ -77,15 +79,15 @@ window.view.resident = () => {
 window.view.listVisitors = () => {
   let htmlListVisitors =
     `<table class="table table-bordered table-hover bg-white">
-    <thead class="thead-dark">
+    <thead class="colorTable">
       <tr>
-        <th scope="col" class="text-center">Depto a visitar</th>
-        <th scope="col" class="text-center">Nombre Visitante</th>
-        <th scope="col" class="text-center">Rut</th>
-        <th scope="col" class="text-center">N° Acompañantes</th>
-        <th scope="col" class="text-center">Fecha</th>
-        <th scope="col" class="text-center">Hora</th>
-        <th scope="col" class="text-center">Foto</th>
+        <th scope="col" class="text-center text-white lead">Depto a visitar</th>
+        <th scope="col" class="text-center text-white lead">Nombre Visitante</th>
+        <th scope="col" class="text-center text-white lead">Rut</th>
+        <th scope="col" class="text-center text-white lead">N° Acompañantes</th>
+        <th scope="col" class="text-center text-white lead">Fecha</th>
+        <th scope="col" class="text-center text-white lead">Hora</th>
+        <th scope="col" class="text-center text-white lead">Foto</th>
       </tr>
   </thead>`;
   const allVisitors = window.controller.tableCollectionVisitors();
