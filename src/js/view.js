@@ -186,6 +186,5 @@ window.view.insertResident = (dataRes) => {
   <p><b>Nombre Residente:</b>${dataRes.resident2}</p>
   <p><b>Nombre Residente:</b>${dataRes.resident3}</p>
   <p><b>Nombre Residente:</b>${dataRes.resident4}</p>
-</div>
-  `
+</div>`
 };

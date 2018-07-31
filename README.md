@@ -11,24 +11,24 @@ En el presente proyecto la empresa de coworking donde opera Laboratoria ha decid
 ## Definición del producto
 
 La finalidad de ésta aplicación consiste en mantener un registro y un orden de todas las personas que ingresan a un lugar de una forma rápida y eficiente, además de mantener dicho registro en una base de datos Firebase para que también sea duradero. Adicional a ésto, cuenta con la ventaja de poder avisar a la persona u organización, a través de un mail, que la visita está presente en el lugar. 
-Nuestro diseño está orientado a que sea una aplicación de fácil uso e intuitiva, para que personas de cualquier edad y nivel educacional puedan utilizarla.
-
-## Benchmark
-
-## Diseño
-El primer diseño que propusimos era un poco más orientado a gente que tenía más expertise en el manejo tecnológico, por lo tanto al iterar hicimos algunos cambios mínimos pero que permitían un margen de error mayor.
+Nuestro diseño está orientado a que sea una aplicación de fácil uso e intuitiva, para que personas de cualquier edad y nivel educacional puedan utilizarla.blob
+blob
+## Benchmarkblob
+blob
+## Diseñoblob
+El primer diseño que propusimos era un poco más orientado a gente que teblobnía más expertise en el manejo tecnológico, por lo tanto al iterar hicimos algunos cambios mínimos pero que permitían un margen de error mayor.
 El primer Sketch se veía así:
 
-![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo1.jpg)
-![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo2.jpg)
-![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo3.jpg)
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo1.jpg)
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo2.jpg)
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/UX/Sketch%20baja%20fidelidad/Primer%20Prototipo/PrimerPrototipo3.jpg)
 
 Luego de iterar, nuestro diseño final se ve así:
 
-![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo1.jpg)
-![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo2.jpg)
-![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo3.jpg)
-![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/blob/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo4.jpg)
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo1.jpg)
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo2.jpg)
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo3.jpg)
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/UX/Sketch%20baja%20fidelidad/Prototipo%20Iterado/Prototipo4.jpg)
 
 Se agregaron algunas herramientas para buscar a los residentes y, lo más importante, al borrar a los visitantes pide una confirmación para no borrar a la gente por accidente.
 
