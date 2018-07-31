@@ -1,9 +1,9 @@
 window.controller = {};
 
-window.onload = () => {
-  window.view.visitor();
-  window.controller.performCapture();
-};
+// window.onload = () => {
+//   window.view.visitor();
+//   window.controller.performCapture();
+// };
 
 
 // lee datos (inputs) de visitantes
