@@ -1,15 +1,14 @@
 window.controller = {};
 
-// window.onload = () => {
-//   window.view.visitor();
-//   window.controller.performCapture();
-// };
+window.onload = () => {
+  window.view.visitor();
+  window.controller.performCapture();
+};
 
 
 // lee datos (inputs) de visitantes
 window.controller.dataInformationVisitor = () => {
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
-  const nameResidentVisitor = document.getElementById('nameResidentVisitor').value;
   const nameVisitor = document.getElementById('nameVisitor').value;
   const rutVisitor = document.getElementById('rutVisitor').value;
   const numCompanionsVisitor = document.getElementById('numCompanionsVisitor').value;
@@ -20,7 +19,6 @@ window.controller.dataInformationVisitor = () => {
   const dataVisitor = {
     date: new Date(),
     numberDept: toWhoVisitor,
-    nameResident: nameResidentVisitor,
     name: nameVisitor,
     rut: rutVisitor,
     companions: numCompanionsVisitor,
@@ -30,19 +28,11 @@ window.controller.dataInformationVisitor = () => {
   window.data.collectionDataVisitor(dataVisitor);
 
   document.getElementById('toWhoVisitor').value = '';
-  document.getElementById('nameResidentVisitor').value = '';
   document.getElementById('nameVisitor').value = '';
   document.getElementById('rutVisitor').value = '';
   document.getElementById('numCompanionsVisitor').value = '';
 
   window.data.readCollectionVisitors();
-};
-
-
-// busca dato de residentes según num depto
-window.controller.dataNumberResident = () => {
-  const toWhoVisitor = document.getElementById('toWhoVisitor').value;
-  window.data.getDataResident(toWhoVisitor);
 };
 
 
@@ -116,3 +106,10 @@ window.controller.performCapture = () => {
     .then(handleSuccess);
 };
 
+
+// lee residentes de un dpto
+window.controller.namesResident = () => {
+  let id = document.getElementById('toWhoVisitor').value;
+  window.data.getDataResident(id);
+  
+};
