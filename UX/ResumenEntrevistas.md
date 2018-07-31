@@ -1,4 +1,5 @@
-                    Aplicación GuardingPost
+Aplicación VisitasApp
+
 La finalidad de ésta aplicación consiste en mantener un registro y un orden de todas las personas que ingresan a un lugar de una forma rápida y eficiente, además de mantener dicho registro en una base de datos Firebase para que también sea duradero. Adicional a ésto, cuenta con la ventaja de poder avisar a la persona u organización, a través de un mail, que la visita está presente en el lugar. 
 Nuestro diseño está orientado a que sea una aplicación de fácil uso e intuitiva, para que personas de cualquier edad y nivel educacional puedan utilizarla.
 Para lograr ésto, desarrollamos 1 sketch y lo testeamos con 3 conserjes, junto a una breve entrevista.
