@@ -1,18 +1,60 @@
-body{
-  background-image: url('../img/fondo.jpg');
+.navbar {
+  background-color: #405241;
 }
 
-@media (min-width: 992px){
+.fa {
+  color: whitesmoke;
+}
+
+#visitorPhoto, #visitorData, #apartmentNumber {
+  background-color: white;
+  border-radius: 3px;
+}
+
+body {
+  background-color: #AACA97;
+}
+
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.button-photo {
+  width: 40%;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-photo:hover {
+  background-color: #45a049;
+}
+
+.imageLogo {
+  width: 40vw;
+}
+
+@media (min-width: 992px) {
+  body {
+    background-image: url('../img/fondo.jpg');
+  }
   .sidebar {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 100; 
-    padding: 48px 0 0; 
+    z-index: 100;
+    padding: 48px 0 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   }
-
   .sidebar-sticky {
     position: sticky;
     top: 0;
@@ -21,14 +63,14 @@ body{
     overflow-x: hidden;
     overflow-y: auto;
   }
-
+  .imageLogo {
+    width: 20vw;
+  }
 }
 
-.enlacesMenu{
-
- /*width: 200px;*/
- background: transparent;
- border:none;
- float: left;
+.enlacesMenu {
+  /*width: 200px;*/
+  background: transparent;
+  border: none;
+  float: left;
 }
-
