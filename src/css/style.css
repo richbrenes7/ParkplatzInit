@@ -59,6 +59,7 @@ input[type=text] {
   background: transparent;
   border: none;
   float: left;
+  cursor: pointer;
 }
 
 .sidebarColor {

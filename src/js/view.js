@@ -63,7 +63,7 @@ window.view.resident = () => {
     `<div class="row justify-content-center">
     <div class="bg-white p-4 col-lg-10 rounded containerTransparent">
     <p class="lead titlePage mt-4">Registro Visitantes</p>
-    <input id="numberDeptResident" type="text" placeholder="Nº departamento">
+      <input id="numberDeptResident" type="text" placeholder="Nº departamento">
       <input id="nameResident" type="text" placeholder="Nombre">
       <input id="resident2" type="text" placeholder="Otro residente">
       <input id="resident3" type="text" placeholder="Otro residente">
