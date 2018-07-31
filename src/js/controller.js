@@ -1,8 +1,10 @@
 window.controller = {};
 
 window.onload = () => {
+  window.view.visitor();
   window.controller.performCapture();
 };
+
 
 // lee datos (inputs) de visitantes
 window.controller.dataInformationVisitor = () => {
@@ -48,18 +50,28 @@ window.controller.dataNumberResident = () => {
 window.controller.dataInformationResident = () => {
   const numberDeptResident = document.getElementById('numberDeptResident').value;
   const nameResident = document.getElementById('nameResident').value;
+  const resident2 = document.getElementById('resident2').value;
+  const resident3 = document.getElementById('resident3').value;
+  const resident4 = document.getElementById('resident4').value;
   const emailResident = document.getElementById('emailResident').value;
+
 
   const dataResident = {
     numberDept: numberDeptResident,
     nameResident: nameResident,
-    email: emailResident
+    email: emailResident,
+    resident2: resident2,
+    resident3: resident3,
+    resident4: resident4,
   };
   window.data.collectionDataResident(dataResident);
 
   document.getElementById('numberDeptResident').value = '';
   document.getElementById('nameResident').value = '';
   document.getElementById('emailResident').value = '';
+  document.getElementById('resident2').value = '';
+  document.getElementById('resident3').value = '';
+  document.getElementById('resident4').value = '';
 };
 
 

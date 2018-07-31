@@ -38,6 +38,10 @@ input[type=text] {
   background-color: #45a049;
 }
 
+.imageLogo {
+  width: 40vw;
+}
+
 @media (min-width: 992px) {
   .sidebar {
     position: fixed;
@@ -55,6 +59,9 @@ input[type=text] {
     padding-top: .5rem;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+  .imageLogo {
+    width: 20vw;
   }
 }
 
