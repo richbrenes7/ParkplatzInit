@@ -39,21 +39,23 @@
 
 <body>
 
-  <div class="container-fluid">
+  <div class="container-fluid containerStyle">
     <div class="row">
       <!-- sidebar-->
-      <div class="col-lg-3 navbar-dark bg-dark sidebar sidebar-sticky">
+      <div class="col-lg-3 sidebarColor sidebar sidebar-sticky p-0">
         <nav class="navbar navbar-expand-lg flex-lg-column">
-          <a class="h3 text-white" href="#">EASY REGISTER</a>
+          <a class="h3 titleLogo mt-3 mb-3" href="#">EASY REGISTER</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
             aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon">
+              <i class="fas fa-bars colorIcon"></i>
+            </span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav flex-lg-column">
-              <button class="nav-item nav-link enlacesMenu" onclick="window.view.resident()">Ingresar Residentes</button>
-              <button class="nav-item nav-link enlacesMenu" onclick="window.view.visitor()">Ingresar Visitantes</button>
-              <button class="nav-item nav-link enlacesMenu" onclick="window.view.listVisitors()">Lista de Visitantes</button>
+              <button class="nav-item nav-link enlacesMenu text-white" onclick="window.view.resident()">Ingresar Residentes</button>
+              <button class="nav-item nav-link enlacesMenu text-white" onclick="window.view.visitor()">Ingresar Visitantes</button>
+              <button class="nav-item nav-link enlacesMenu text-white" onclick="window.view.listVisitors()">Lista de Visitantes</button>
             </div>
           </div>
         </nav>
@@ -61,7 +63,7 @@
       <!-- contenido-->
       <div class="col-lg-9">
         <!-- <h1 class="py-3 text-center display-4">VisitasApp</h1> -->
-        <div class="text-center">
+        <div class="text-center mt-4 mb-4">
           <img src="img/logoEasyRegister.png" class="img-fluid imageLogo" alt="Responsive image">
         </div>
 
@@ -83,4 +85,3 @@
 </body>
 
 </html>
-

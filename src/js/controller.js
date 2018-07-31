@@ -108,6 +108,6 @@ window.controller.performCapture = () => {
 
 
 // escribo residentes
-window.container.infoResident = () => {
+window.controller.infoResident = () => {
   window.data.getDataResident();
 };

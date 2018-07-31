@@ -6,16 +6,19 @@ window.view.visitor = () => {
   let divVisitor = document.getElementById('container');
   divVisitor.innerHTML =
     `<!--Registro del visitante y confirmación del departamento a ingresar-->
+    <div class="row justify-content-center">
+    <div class="col-lg-10 bg-white rounded"> 
+    <p class="lead titlePage mt-4">Registro Visitantes</p>
       <div class="container mt-2 mb-2" id="registry">
         <!--Confirmación del departamento-->
         <div class="container" id="apartmentNumber">
-          <label for="toWhoVisitor" class="mt-2">Departamento a visitar</label>
-          <input type="text" id="toWhoVisitor" placeholder="Ingrese departamento">
+          <label for="toWhoVisitor" class="mt-2 colorTextLabel">Departamento a visitar</label>
+          <input type="text" id="toWhoVisitor" placeholder="Ingrese departamento" requeried>
           <div id="insertResident"></div>
         </div>
         <div>
           <div class="row justify-content-center">
-            <button class="button-photo p-3 mt-2 mb-2 btn" id="btnSearchResidentVisitor" data-toggle="modal" data-target="#exampleModal" onclick="window.container.infoResident()">Mostrar residentes</button>
+            <button class="button-photo p-3 mt-2 mb-2 btn btn-warning text-white" id="btnSearchResidentVisitor" onclick="window.controller.infoResident()">Mostrar residentes</button>
           </div>
         </div>
         <div id="containerModal"></div>
@@ -26,27 +29,28 @@ window.view.visitor = () => {
             <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240></canvas>
           </div>
           <div class="row justify-content-center">
-            <button class="button-photo mr-1" id="capture">Sacar foto</button>
-            <button class="button-photo ml-1" id="newCapture">Otra Foto</button>
+            <button class="button-photo mr-1 btn btn-warning text-white" id="capture">Sacar foto</button>
+            <button class="button-photo ml-1 btn btn-warning text-white" id="newCapture">Otra Foto</button>
           </div>
         </div>
         <!--Datos del visitante-->
         <div class="container" id="visitorData">
-          <label for="nameVisitor" class="mt-2">Nombre del visitante</label>
-          <input type="text" id="nameVisitor" placeholder="Nombre">
+          <label for="nameVisitor" class="mt-2 colorTextLabel">Nombre del visitante</label>
+          <input type="text" id="nameVisitor" placeholder="Nombre Visitante" required>
 
-          <label for="rutVisitor">RUT del visitante</label>
-          <input type="text" id="rutVisitor" placeholder="RUT">
+          <label for="rutVisitor" class="colorTextLabel">RUT del visitante</label>
+          <input type="text" id="rutVisitor" placeholder="RUT" required>
 
-          <label for="numCompanionsVisitor">Número de acompañantes</label>
-          <input type="text" id="numCompanionsVisitor" placeholder="Numero">
+          <label for="numCompanionsVisitor" class="colorTextLabel">Número de acompañantes</label>
+          <input type="text" id="numCompanionsVisitor" placeholder="Numero" required>
         </div>
         <div>
           <div class="row justify-content-center">
-            <button class="button-photo p-3 mt-2" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Agregar</button>
+            <button class="button-photo p-3 mt-2 btn btn-warning text-white" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Agregar</button>
           </div>
         </div>
-        
+        </div> 
+      </div>
       </div>`;
 };
 
@@ -55,13 +59,18 @@ window.view.visitor = () => {
 window.view.resident = () => {
   let divResident = document.getElementById('container');
   divResident.innerHTML =
-    `<input id="numberDeptResident" type="text" placeholder="Nº departamento">
+    `<div class="row justify-content-center">
+    <div class="bg-white p-4 col-lg-10 rounded">
+    <p class="lead titlePage mt-4">Registro Visitantes</p>
+    <input id="numberDeptResident" type="text" placeholder="Nº departamento">
       <input id="nameResident" type="text" placeholder="Nombre">
       <input id="resident2" type="text" placeholder="Otro residente">
       <input id="resident3" type="text" placeholder="Otro residente">
       <input id="resident4" type="text" placeholder="Otro residente">
       <input id="emailResident" type="text" placeholder="Correo electronico">
-      <button type="button" id="btnDataResident" onclick="window.controller.dataInformationResident()">Guardar</button>`;
+      <button type="button" id="btnDataResident" class="btn btn-warning text-white" onclick="window.controller.dataInformationResident()">Guardar</button>
+      </div>
+      </div>`;
 };
 
 
@@ -111,14 +120,14 @@ window.view.listVisitors = () => {
       <td class="text-center">${vis.rut}</td>
       <td class="text-center">${vis.companions}</td>
       <td class="text-center">${date}</td>
-      <td class="text-ceninsertResidenter">${hour}</td>
-      <td class="text-ceninsertResidenter"><button class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${vis.image}')">Ver</button></td>
+      <td class="text-center">${hour}</td>
+      <td class="text-center"><button class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${vis.image}')">Ver</button></td>
       </tr>
       </tbody>
       `;
     });
-    let divListVisitors = insertResidentdocument.getElementById('container');
-    divListVisitors.innerinsertResidentTML = htmlListVisitors +
+    let divListVisitors = document.getElementById('container');
+    divListVisitors.innerHTML = htmlListVisitors +
       '</table>';
   });
 };
@@ -181,7 +190,7 @@ window.view.insertResident = (dataRes) => {
   let divInsertResident = document.getElementById('insertResident');
   divInsertResident.innerHTML =
     `<div class="container">
-  <label for="toWhoVisitor" class="mt-2">Residentes</label>
+  <label for="Residents" class="mt-2">Residentes</label>
   <p><b>Nombre Residente:</b>${dataRes.nameResident}</p>
   <p><b>Nombre Residente:</b>${dataRes.resident2}</p>
   <p><b>Nombre Residente:</b>${dataRes.resident3}</p>
