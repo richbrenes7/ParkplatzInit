@@ -38,6 +38,7 @@ window.controller.dataInformationVisitor = () => {
 window.controller.dataNumberResident = () => {
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   window.data.getDataResident(toWhoVisitor);
+  window.view.infoResidentModal();  
 };
 
 
@@ -100,9 +101,10 @@ window.controller.performCapture = () => {
 
   newCapture.addEventListener('click', () => {
     navigator.mediaDevices.getUserMedia({ video: true })
-      .then(handleSuccess);
+    .then(handleSuccess);
   });
 
   navigator.mediaDevices.getUserMedia({ video: true })
-    .then(handleSuccess);
+  .then(handleSuccess);
 };
+
