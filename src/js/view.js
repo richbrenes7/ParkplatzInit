@@ -132,33 +132,6 @@ window.view.listVisitors = () => {
   });
 };
 
-// modal informacion resiinsertResidententes
-window.view.infoResidentMinsertResidentdal = (data) => {
-  let modalResident = document.getElementById('containerModal');
-  modalResident.innerHTML =
-    `<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-      <div class="modal-content">
-      <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Residentes del Departamento</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-      </button>
-      </div>
-      <div class="modal-body">
-      <p><b>N° Depto:</b> 2 </p>
-      <p><b>Nombre Residente:</b>${dataResident.nameResident}</p>
-      <p><b>Nombre Residente:</b>${dataResident.resident2}</p>
-      <p><b>Nombre Residente:</b>${dataResident.resident3}</p>
-      <p><b>Nombre Residente:</b>${dataResident.resident4}</p>
-      </div>
-      <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-      </div>
-      </div>
-      </div>
-      </div>`;
-};
 
 // modal foto visitante
 
@@ -195,5 +168,5 @@ window.view.insertResident = (dataRes) => {
   <p><b>Nombre Residente:</b>${dataRes.resident2}</p>
   <p><b>Nombre Residente:</b>${dataRes.resident3}</p>
   <p><b>Nombre Residente:</b>${dataRes.resident4}</p>
-</div>`
+</div>`;
 };
