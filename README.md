@@ -1,4 +1,4 @@
-# Final Core
+# EASY REGISTER
 
 ## Preámbulo
 
@@ -32,7 +32,6 @@ Permitiendo además relacionar los visitantes con la comunidad
 ![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/img/gbook1.png)
 
 
-
 ## Diseño
 El primer diseño que propusimos era un poco más orientado a gente que teblobnía más expertise en el manejo tecnológico, por lo tanto al iterar hicimos algunos cambios mínimos pero que permitían un margen de error mayor.
 El primer Sketch se veía así:
@@ -50,9 +49,11 @@ Luego de iterar, nuestro diseño final se ve así:
 
 Se agregaron algunas herramientas para buscar a los residentes y, lo más importante, al borrar a los visitantes pide una confirmación para no borrar a la gente por accidente.
 
-## Diseño
 
-[Diseño](https://marvelapp.com/336198i/screen/46243708)
+## Prototipo
+
+[Prototipo](https://marvelapp.com/336198i/screen/46243708)
+
 
 ## Entrevistas
 
@@ -64,6 +65,12 @@ Donde hubo más conflicto fue en el tema de ver la información del registrado y
 Al abrirse la pantalla, todos supieron volver y borrar el registro.
 Fue una interesante instancia de interacción y prueba de nuestro diseño, dentro de todo no hubo mucho conflicto en utilizarlo y las sugerencias fueron mayoritariamente de diseño.
 Gracias a ésto, pudimos llegar a nuestro diseño final.
+
+
+## Deploy
+
+[Easy Register](https://finalcorelaboratoria.firebaseapp.com/)
+
 
 ## Guía de instalación
 
