@@ -111,5 +111,4 @@ window.controller.performCapture = () => {
 window.controller.namesResident = () => {
   let id = document.getElementById('toWhoVisitor').value;
   window.data.getDataResident(id);
-  
 };
