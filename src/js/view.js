@@ -113,17 +113,16 @@ window.view.listVisitors = () => {
 
       htmlListVisitors +=
         `<tbody>
-      <tr>
-      <td class="text-center">${vis.numberDept}</td>
-      <td class="text-center">${vis.name}</td>
-      <td class="text-center">${vis.rut}</td>
-      <td class="text-center">${vis.companions}</td>
-      <td class="text-center">${date}</td>
-      <td class="text-center">${hour}</td>
-      <td class="text-center"><button class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${vis.image}')">Ver</button></td>
-      </tr>
-      </tbody>
-      `;
+          <tr>
+          <td class="text-center">${vis.numberDept}</td>
+          <td class="text-center">${vis.name}</td>
+          <td class="text-center">${vis.rut}</td>
+          <td class="text-center">${vis.companions}</td>
+          <td class="text-center">${date}</td>
+          <td class="text-center">${hour}</td>
+          <td class="text-center"><button class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${vis.image}')">Ver</button></td>
+          </tr>
+          </tbody>`;
     });
     let divListVisitors = document.getElementById('container');
     divListVisitors.innerHTML = htmlListVisitors +
@@ -147,7 +146,7 @@ window.view.photoVisitModal = (image) => {
   </button>
   </div>
   <div class="modal-body">
-  <img src="${image}" alt="">
+  <img src="${image}" alt="Fotografia Visitante">
   </div>
   <div class="modal-footer">
   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -163,9 +162,9 @@ window.view.insertResident = (dataRes) => {
   divInsertResident.innerHTML =
     `<div class="container">
   <label for="Residents" class="mt-2">Residentes</label>
-  <p><b>Nombre Residente:</b>${dataRes.nameResident}</p>
-  <p><b>Nombre Residente:</b>${dataRes.resident2}</p>
-  <p><b>Nombre Residente:</b>${dataRes.resident3}</p>
-  <p><b>Nombre Residente:</b>${dataRes.resident4}</p>
+  <p><b>Residente:</b>${dataRes.nameResident}</p>
+  <p><b>Residente:</b>${dataRes.resident2}</p>
+  <p><b>Residente:</b>${dataRes.resident3}</p>
+  <p><b>Residente:</b>${dataRes.resident4}</p>
 </div>`;
 };

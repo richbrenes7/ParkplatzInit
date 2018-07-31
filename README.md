@@ -15,6 +15,24 @@ Nuestro diseño está orientado a que sea una aplicación de fácil uso e intuit
 
 ## Benchmark
 
+Al comparar aplicaciones existentes en el mercado, que realicen trabajos similares al proyecto Easy Register, pudimos encontrar dos de referencia.
+
+[Envoy](https://envoy.com): Aplicación que registra visitantes en distintos espacios, ofreciendo notificaciones personales, firma de consentimiento, impresión de insignia y preinscripción de visita.
+
+A su vez se puede tener un registro de visitantes y administrarlos.
+
+[GBook](https://gbook.cl): Aplicación chilena que realiza el registro de visitas en diferentes recintos, siendo su principal característica la lectura de cedula de identidad para el registro de visitantes.
+
+Permitiendo además relacionar los visitantes con la comunidad
+
+#### Envoy
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/img/envoy2.png)
+
+#### GBook
+![image](https://github.com/NatalyVerdugoNogue/scl-2018-01-ProyectoFinalCore/raw/master/img/gbook1.png)
+
+
+
 ## Diseño
 El primer diseño que propusimos era un poco más orientado a gente que teblobnía más expertise en el manejo tecnológico, por lo tanto al iterar hicimos algunos cambios mínimos pero que permitían un margen de error mayor.
 El primer Sketch se veía así:
