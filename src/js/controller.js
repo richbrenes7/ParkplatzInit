@@ -111,3 +111,10 @@ window.controller.performCapture = () => {
 window.controller.infoResident = () => {
   window.data.getDataResident();
 };
+
+
+// recarga de vista agregar visitante
+window.controller.viewVisitor = () => {
+  window.view.visitor();
+  window.controller.performCapture();
+};
