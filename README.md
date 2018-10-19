@@ -116,7 +116,7 @@ sudo yum install git
 #### Fork
 
 Haz tu propio [fork](https://help.github.com/articles/fork-a-repo/)
-del siguiente [repositorio](https://github.com/NatalyVerdugoNogue/scl-2018-05-bc-core-am-socialnetwork).
+del siguiente [repositorio](https://github.com/NatalyVerdugoNogue/EasyRegister).
 
 #### Clonar
 
