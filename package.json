@@ -2,8 +2,10 @@
   "name": "finalcore",
   "version": "1.0.0",
   "main": "server.js",
+  "engines": {
+        "node": "16.x"},
   "scripts": {
-    "start": "node server.js",
+    "start": "node index.js",
     "build": "webpack --config webpack.config.js",
     "htmlhint": "htmlhint src/*.html test/*.html",
     "eslint": "eslint --ext .js src/ test/",
