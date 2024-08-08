@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Sirve los archivos estáticos desde el directorio 'public' o 'dist'
+// Sirve los archivos estáticos desde el directorio 'public'
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Maneja todas las rutas y retorna el archivo index.html
