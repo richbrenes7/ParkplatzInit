@@ -5,7 +5,8 @@ module.exports = {
   entry: './src/js/index.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    clean: true
   },
   mode: 'production',
   resolve: {
@@ -57,5 +58,10 @@ module.exports = {
       template: './src/index.html',
       filename: 'index.html'
     })
-  ]
+  ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  }
 };
