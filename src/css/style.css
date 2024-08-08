@@ -63,7 +63,7 @@ input[type=text] {
 }
 
 .sidebarColor {
-  background-color: #4BBB8B;
+  background-color: rgba(255, 230, 0, 0.123);
 }
 
 .titleLogo{

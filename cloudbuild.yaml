@@ -1,0 +1,7 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/parkplatz-4376a/parkplatz:$COMMIT_SHA', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/parkplatz-4376a/parkplatz:$COMMIT_SHA']
+images:
+  - 'gcr.io/parkplatz-4376a/parkplatz:$COMMIT_SHA'
