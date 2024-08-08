@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "engines": {
-    "node": "16.x"
+    "node": ">=16"
   },
   "scripts": {
     "start": "node server.js",
@@ -31,13 +31,27 @@
   "devDependencies": {
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.2",
+    "assert": "^2.1.0",
+    "async_hooks": "^1.0.0",
     "babel-loader": "^8.2.2",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.10.0",
     "css-loader": "^7.1.2",
     "file-loader": "^6.2.0",
+    "fs": "^0.0.1-security",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.0",
+    "path-browserify": "^1.0.1",
+    "querystring-es3": "^0.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
     "style-loader": "^4.0.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5",
+    "vm-browserify": "^1.1.2",
     "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2"
+    "webpack-cli": "^4.7.2",
+    "zlib": "^1.0.5"
   }
 }
