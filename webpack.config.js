@@ -7,37 +7,48 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
+  mode: 'production',
+  resolve: {
+    alias: {
+      zlib: 'browserify-zlib'
+    },
+    fallback: {
+      "assert": require.resolve("assert/"),
+      "path": require.resolve("path-browserify"),
+      "crypto": require.resolve("crypto-browserify"),
+      "stream": require.resolve("stream-browserify"),
+      "http": require.resolve("stream-http"),
+      "buffer": require.resolve("buffer/"),
+      "url": require.resolve("url/"),
+      "util": require.resolve("util/"),
+      "vm": require.resolve("vm-browserify"),
+      "zlib": require.resolve("browserify-zlib"),
+      "querystring": require.resolve("querystring-es3"),
+      "fs": false,
+      "net": false,
+      "tls": false,
+      "async_hooks": false
+    }
+  },
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
-      },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(png|jpg|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-            },
-          },
-        ],
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
       },
       {
-        test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader'
-          }
-        ]
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
       }
     ]
   },
@@ -46,12 +57,5 @@ module.exports = {
       template: './src/index.html',
       filename: 'index.html'
     })
-  ],
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 9000,
-    historyApiFallback: true
-  },
-  mode: 'development'
+  ]
 };
