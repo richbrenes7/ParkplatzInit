@@ -5,7 +5,7 @@
   "engines": {
         "node": "16.x"},
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "build": "webpack --config webpack.config.js",
     "htmlhint": "htmlhint src/*.html test/*.html",
     "eslint": "eslint --ext .js src/ test/",
