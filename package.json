@@ -25,6 +25,7 @@
     "firebase": "^10.12.5",
     "htmlhint": "^1.1.4",
     "mocha": "^10.7.0",
+    "mongodb": "^6.8.0",
     "mongoose": "^8.5.2",
     "nyc": "^17.0.0",
     "opener": "^1.4.3"
