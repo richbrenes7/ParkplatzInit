@@ -2,6 +2,16 @@ const express = require('express');
 const axios = require('axios');
 const path = require('path');
 
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/tu-base-de-datos', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected...'))
+.catch(err => console.log(err));
+
+
 const MAX_RETRIES = 5;
 let retries = 0;
 
