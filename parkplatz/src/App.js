@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Content from './components/Content';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
+import AdminDashboard from './components/AdminDashboard';
+import UserDashboard from './components/UserDashboard';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [view, setView] = useState('Visitor');
+    const isAuthenticated = !!localStorage.getItem('token');
 
-  const handleLogin = (userData) => {
-    setUser(userData);
-  };
-
-  return (
-    <div className="App">
-      {!user ? (
-        <Login onLogin={handleLogin} />
-      ) : (
-        <>
-          <Header />
-          <div className="App-body" style={{ display: 'flex' }}>
-            <Sidebar setView={setView} />
-            <Content view={view} user={user} />
-          </div>
-        </>
-      )}
-    </div>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route
+                    path="/admin-dashboard"
+                    element={
+                        isAuthenticated ? <AdminDashboard /> : <Navigate to="/login" />
+                    }
+                />
+                <Route
+                    path="/user-dashboard"
+                    element={
+                        isAuthenticated ? <UserDashboard /> : <Navigate to="/login" />
+                    }
+                />
+                <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
