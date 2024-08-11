@@ -38,12 +38,14 @@ function startServer() {
     // Middleware para servir archivos estáticos
     app.use(express.static(path.join(__dirname, 'dist')));
 
-    // Rutas de administrador
+    // Importar y usar las rutas de administrador
     const adminRoutes = require('./routes/adminRoutes');
+    console.log('Cargando rutas de administrador...');
     app.use('/api', adminRoutes);
 
     // Importar y usar las rutas de login
     const loginRoute = require('./routes/loginRoute');
+    console.log('Cargando rutas de login...');
     app.use('/api', loginRoute);
 
     // Rutas de ejemplo

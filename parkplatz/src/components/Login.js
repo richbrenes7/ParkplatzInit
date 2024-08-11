@@ -25,7 +25,7 @@ function Login() {
             }
         } catch (error) {
             console.error('Error during login:', error);
-            alert('Usuario o contraseña incorrectos');
+            alert(error.response.data.message || 'Error en el servidor');
         }
     };
     
