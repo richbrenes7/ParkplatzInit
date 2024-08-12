@@ -1,6 +1,6 @@
+// createUser.js
 require('dotenv').config({ path: './apipark.env' });
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const User = require('./models/User');
 
 async function createUser(username, password, role) {
@@ -9,15 +9,13 @@ async function createUser(username, password, role) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
+  
         const newUser = new User({
             username,
-            password: hashedPassword, // Asegúrate de que se guarde como string
+            password, // Almacenar la contraseña tal cual se proporciona
             role,
         });
-
+  
         await newUser.save();
         console.log(`Usuario ${username} creado con éxito`);
         process.exit(0);
@@ -27,5 +25,5 @@ async function createUser(username, password, role) {
     }
 }
 
-// Reemplaza estos valores con los que desees
-createUser('ricardo1', '12345', 'Administrador');
+// Reemplaza estos valores con el usuario y la contraseña que quieras crear
+createUser('ricardo1', '1234', 'Administrador');

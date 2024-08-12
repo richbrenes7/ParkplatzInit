@@ -41,7 +41,12 @@ function startServer() {
     // Importar y usar las rutas de administrador
     const adminRoutes = require('./routes/adminRoutes');
     console.log('Cargando rutas de administrador...');
-    app.use('/api', adminRoutes);
+    app.use('/api/admin', adminRoutes);
+
+    // Importar y usar las rutas de autenticación
+    const authRoutes = require('./routes/authRoutes');
+    console.log('Cargando rutas de autenticación...');
+    app.use('/api/auth', authRoutes);
 
     // Importar y usar las rutas de login
     const loginRoute = require('./routes/loginRoute');
@@ -59,9 +64,9 @@ function startServer() {
         }
     });
 
-    // Ruta para manejar todas las demás rutas y devolver el archivo index.html
+    // Redirigir a la página de login si no se encuentra una ruta
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'dist/index.html'));
+        res.redirect('/login');
     });
 
     // Puerto de la aplicación

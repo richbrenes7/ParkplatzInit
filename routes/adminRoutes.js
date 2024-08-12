@@ -1,56 +1,35 @@
+// adminRoutes.js
 const express = require('express');
-const User = require('../models/User');
-const nodemailer = require('nodemailer');
-const crypto = require('crypto');
 const { resetPassword, deleteUser } = require('../controllers/adminController');
+const User = require('../models/User');
 
 const router = express.Router(); // Declaramos router una sola vez
 
 // Ruta para reiniciar la contraseña
-router.put('/admin/reset-password', resetPassword);
+router.put('/reset-password', resetPassword);
 
 // Ruta para eliminar un usuario
-router.delete('/admin/delete-user', deleteUser);
+router.delete('/delete-user', deleteUser);
 
-router.post('/forgot-password', async (req, res) => {
-  const { email } = req.body;
+// Nueva Ruta para obtener todos los usuarios
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find({});
+        res.json(users); // Asegúrate de devolver JSON
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener los usuarios' });
+    }
+});
 
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'No existe usuario con ese correo electrónico' });
-
-    // Generar un token de reseteo de contraseña
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hora
-    await user.save();
-
-    // Configurar Nodemailer
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-
-    const mailOptions = {
-      to: user.email,
-      from: process.env.EMAIL_USER,
-      subject: 'Restablecimiento de Contraseña',
-      text: `Has recibido este correo porque tú (o alguien más) solicitó restablecer la contraseña de tu cuenta.\n\n` +
-            `Por favor, haz clic en el siguiente enlace, o copia y pega esta URL en tu navegador para completar el proceso:\n\n` +
-            `http://${req.headers.host}/reset-password/${resetToken}\n\n` +
-            `Si no solicitaste este cambio, por favor ignora este correo y tu contraseña permanecerá sin cambios.\n`
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    res.status(200).json({ message: 'Correo enviado con las instrucciones para restablecer la contraseña.' });
-  } catch (error) {
-    console.error('Error en el proceso de restablecimiento de contraseña:', error);
-    res.status(500).json({ message: 'Error en el servidor' });
-  }
+router.post('/users', async (req, res) => {
+    const { username, password, role } = req.body;
+    try {
+        const newUser = new User({ username, password, role });
+        await newUser.save();
+        res.json(newUser);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al crear usuario' });
+    }
 });
 
 module.exports = router;

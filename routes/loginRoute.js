@@ -1,6 +1,6 @@
+// loginRoute.js
 const express = require('express');
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
@@ -16,10 +16,10 @@ router.post('/login', async (req, res) => {
         }
 
         console.log('Password proporcionada:', password);
-        console.log('Password almacenada (hash):', user.password);
+        console.log('Password almacenada:', user.password);
         
-        // Compara la contraseña proporcionada con la contraseña almacenada (hash)
-        const isMatch = await bcrypt.compare(password, user.password);
+        // Compara la contraseña proporcionada con la contraseña almacenada
+        const isMatch = password === user.password;
         console.log('Coincide:', isMatch);
         
         if (!isMatch) {
@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
 
         res.json({ token, role: user.role });
     } catch (error) {
-        console.error('Error durante el inicio de sesión:', error);
+        console.error('Error durante el login:', error);
         res.status(500).json({ message: 'Error en el servidor' });
     }
 });
