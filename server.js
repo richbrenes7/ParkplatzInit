@@ -1,82 +1,115 @@
 require('dotenv').config({ path: './apipark.env' });
 
 const express = require('express');
-const axios = require('axios');
 const path = require('path');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-const MAX_RETRIES = 5;
-let retries = 0;
+const app = express();
 
+// Conectar a MongoDB
 async function connectToDatabase() {
     try {
-        await mongoose.connect(process.env.MONGO_URI, {
+        await mongoose.connect(process.env.MONGO_URI || process.env.MONGO_URI1, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 5000
         });
         console.log('MongoDB connected...');
     } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-
-        if (retries < MAX_RETRIES) {
-            retries++;
-            console.log(`Retrying to connect to MongoDB... Attempt ${retries} of ${MAX_RETRIES}`);
-            setTimeout(connectToDatabase, 10000); // Esperar 10 segundos antes de intentar de nuevo
-        } else {
-            console.error('Max retries reached. Exiting.');
-            process.exit(1); // Cerrar el proceso si no se puede conectar a la base de datos
-        }
+        console.error('Error connecting to MongoDB:', error.message);
+        process.exit(1);
     }
 }
 
-function startServer() {
-    const app = express();
+connectToDatabase();
 
-    // Middleware para analizar el cuerpo de las solicitudes
-    app.use(express.json());
+// Middleware para manejar JSON
+app.use(express.json());
+app.use(bodyParser.json());
 
-    // Middleware para servir archivos estáticos
-    app.use(express.static(path.join(__dirname, 'dist')));
+// Definir los esquemas y modelos de MongoDB
+const visitorSchema = new mongoose.Schema({
+    numberDept: String,
+    name: String,
+    dpi: String,
+    companions: Number,
+    image: String,
+    date: { type: Date, default: Date.now }
+});
 
-    // Importar y usar las rutas de administrador
-    const adminRoutes = require('./routes/adminRoutes');
-    console.log('Cargando rutas de administrador...');
-    app.use('/api/admin', adminRoutes);
+const residentSchema = new mongoose.Schema({
+    numberDept: String,
+    nameResident: String,
+    email: String,
+    resident2: String,
+    resident3: String,
+    resident4: String
+});
 
-    // Importar y usar las rutas de autenticación
-    const authRoutes = require('./routes/authRoutes');
-    console.log('Cargando rutas de autenticación...');
-    app.use('/api/auth', authRoutes);
+const Visitor = mongoose.model('Visitor', visitorSchema);
+const Resident = mongoose.model('Resident', residentSchema);
 
-    // Importar y usar las rutas de login
-    const loginRoute = require('./routes/loginRoute');
-    console.log('Cargando rutas de login...');
-    app.use('/api', loginRoute);
+// Rutas para la gestión de visitantes y residentes
+app.post('/api/visitors', async (req, res) => {
+    try {
+        const newVisitor = new Visitor({
+            numberDept: req.body.numberDept,
+            name: req.body.name,
+            dpi: req.body.dpi, // Asegúrate de que este campo está presente y es numérico
+            companions: req.body.companions,
+            image: req.body.image
+        });
+        const savedVisitor = await newVisitor.save();
+        res.json({ id: savedVisitor._id });
+    } catch (error) {
+        console.error('Error al agregar visitante:', error.message);
+        res.status(500).send('Error al agregar visitante');
+    }
+});
 
-    // Rutas de ejemplo
-    app.get('/api/data', async (req, res) => {
-        try {
-            const response = await axios.get('https://api.example.com/data');
-            res.json(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            res.status(500).send('Server Error');
-        }
-    });
 
-    // Redirigir a la página de login si no se encuentra una ruta
-    app.get('*', (req, res) => {
-        res.redirect('/login');
-    });
+app.get('/api/visitors', async (req, res) => {
+    try {
+        const visitors = await Visitor.find().sort({ date: -1 }).limit(20);
+        res.json(visitors);
+    } catch (error) {
+        console.error('Error al obtener visitantes:', error.message);
+        res.status(500).send('Error al obtener visitantes');
+    }
+});
 
-    // Puerto de la aplicación
-    const PORT = process.env.PORT || 8080;
+app.put('/api/residents/:id', async (req, res) => {
+    try {
+        const resident = await Resident.findOneAndUpdate({ numberDept: req.params.id }, req.body, { new: true });
+        res.send(resident);
+    } catch (error) {
+        console.error('Error al actualizar residente:', error.message);
+        res.status(500).send('Error al actualizar residente');
+    }
+});
 
-    // Iniciar el servidor
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
-}
+app.get('/api/residents/:id', async (req, res) => {
+    try {
+        const resident = await Resident.findOne({ numberDept: req.params.id });
+        res.send(resident);
+    } catch (error) {
+        console.error('Error al obtener residente:', error.message);
+        res.status(500).send('Error al obtener residente');
+    }
+});
 
-// Conectar a la base de datos y luego iniciar el servidor
-connectToDatabase().then(startServer);
+// Middleware para servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, 'src')));
+
+// Ruta para servir index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'index.html'));
+});
+
+// Iniciar el servidor
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+

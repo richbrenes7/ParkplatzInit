@@ -5,38 +5,37 @@ window.onload = () => {
   window.controller.performCapture();
 };
 
-
-// lee datos (inputs) de visitantes
+// Lee datos (inputs) de visitantes
 window.controller.dataInformationVisitor = () => {
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   const nameVisitor = document.getElementById('nameVisitor').value;
-  const rutVisitor = document.getElementById('rutVisitor').value;
+  const dpiVisitor = document.getElementById('rutVisitor').value;  // Cambiado a 'dpiVisitor'
   const numCompanionsVisitor = document.getElementById('numCompanionsVisitor').value;
 
   let snapshotCanvas = document.getElementById('snapshot');
-  let dataURL = snapshotCanvas.toDataURL();
+  let dataURL = snapshotCanvas.toDataURL(); // Captura la imagen como base64
 
   const dataVisitor = {
     date: new Date(),
     numberDept: toWhoVisitor,
     name: nameVisitor,
-    rut: rutVisitor,
+    dpi: dpiVisitor,  // Asegurarse de que el campo 'dpi' se guarda correctamente
     companions: numCompanionsVisitor,
-    image: dataURL
+    image: dataURL  // Guarda la imagen en base64
   };
 
   window.data.collectionDataVisitor(dataVisitor);
 
+  // Limpiar los campos de entrada después de guardar los datos
   document.getElementById('toWhoVisitor').value = '';
   document.getElementById('nameVisitor').value = '';
-  document.getElementById('rutVisitor').value = '';
+  document.getElementById('rutVisitor').value = ''; // Este campo es para el 'dpi'
   document.getElementById('numCompanionsVisitor').value = '';
 
   window.data.readCollectionVisitors();
 };
 
-
-// lee datos (inputs) de residentes
+// Lee datos (inputs) de residentes
 window.controller.dataInformationResident = () => {
   const numberDeptResident = document.getElementById('numberDeptResident').value;
   const nameResident = document.getElementById('nameResident').value;
@@ -44,7 +43,6 @@ window.controller.dataInformationResident = () => {
   const resident3 = document.getElementById('resident3').value;
   const resident4 = document.getElementById('resident4').value;
   const emailResident = document.getElementById('emailResident').value;
-
 
   const dataResident = {
     numberDept: numberDeptResident,
@@ -54,8 +52,10 @@ window.controller.dataInformationResident = () => {
     resident3: resident3,
     resident4: resident4,
   };
+
   window.data.collectionDataResident(dataResident);
 
+  // Limpiar los campos de entrada después de guardar los datos
   document.getElementById('numberDeptResident').value = '';
   document.getElementById('nameResident').value = '';
   document.getElementById('emailResident').value = '';
@@ -64,14 +64,12 @@ window.controller.dataInformationResident = () => {
   document.getElementById('resident4').value = '';
 };
 
-
-// comunica data de colleccion de visitantes con escritura
+// Comunica data de colección de visitantes con escritura
 window.controller.tableCollectionVisitors = () => {
   return window.data.readCollectionVisitors();
 };
 
-
-// realizar captura de foto
+// Realizar captura de foto
 window.controller.performCapture = () => {
   let player = document.getElementById('player');
   let snapshotCanvas = document.getElementById('snapshot');
@@ -80,18 +78,16 @@ window.controller.performCapture = () => {
   let videoTracks;
 
   let handleSuccess = (stream) => {
-    // Attach the video stream to the video element and autoplay.
+    // Adjunta el flujo de video al elemento de video y autoplay
     player.srcObject = stream;
     videoTracks = stream.getVideoTracks();
   };
 
   captureButton.addEventListener('click', () => {
-    let context = snapshot.getContext('2d');
+    let context = snapshotCanvas.getContext('2d');
     context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-    // let dataURL = snapshotCanvas.toDataURL();
-    // console.log('BASE 64:', dataURL);
 
-    // Stop all video streams.
+    // Detener todos los flujos de video
     videoTracks.forEach((track) => {
       track.stop();
     });
@@ -106,14 +102,12 @@ window.controller.performCapture = () => {
     .then(handleSuccess);
 };
 
-
-// escribo residentes
+// Obtener datos de residente
 window.controller.infoResident = () => {
   window.data.getDataResident();
 };
 
-
-// recarga de vista agregar visitante
+// Recarga de vista agregar visitante
 window.controller.viewVisitor = () => {
   window.view.visitor();
   window.controller.performCapture();

@@ -1,69 +1,77 @@
 window.data = {};
 
-
-// guardar collección de visitante
+// Guardar colección de visitantes
 window.data.collectionDataVisitor = (dataVisitor) => {
-  const firestore = firebase.firestore();
-  const settings = {
-    timestampsInSnapshots: true
-  };
-  firestore.settings(settings);
-  firestore.collection('visitors').add(dataVisitor)
-    .then((docRef) => {
-      console.log('Document written with ID: ', docRef.id);
+  fetch('/api/visitors', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        numberDept: dataVisitor.numberDept,
+        name: dataVisitor.name,
+        dpi: dataVisitor.dpi, // Asegúrate de que este valor se envía correctamente
+        companions: dataVisitor.companions,
+        image: dataVisitor.image
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Visitor data saved with ID:', data.id);
+  })
+  .catch(error => {
+    console.error('Error adding visitor data:', error);
+  });
+};
+
+
+// Guardar colección de residentes
+window.data.collectionDataResident = (dataResident) => {
+  const id = dataResident.numberDept;
+  fetch(`/api/residents/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataResident)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Resident data updated with ID:', id);
+  })
+  .catch((error) => {
+    console.error('Error updating resident data:', error);
+  });
+};
+
+// Obtener documento residentes
+window.data.getDataResident = () => {
+  const numDepto = document.getElementById('toWhoVisitor').value;
+  console.log(numDepto);
+
+  fetch(`/api/residents/${numDepto}`)
+    .then(response => response.json())
+    .then(doc => {
+      if (doc) {
+        console.log('Resident data:', doc);
+        window.view.insertResident(doc);
+      } else {
+        console.log('No such document!');
+      }
     })
     .catch((error) => {
-      console.error('Error adding document: ', error);
+      console.log('Error getting resident data:', error);
     });
 };
 
-
-// guardar collección de residente
-window.data.collectionDataResident = (dataResident) => {
-  const firestore = firebase.firestore();
-  const settings = {
-    timestampsInSnapshots: true
-  };
-  firestore.settings(settings);
-
-  let id = dataResident.numberDept;
-  firestore.collection('resident').doc(id).set(dataResident);
-};
-
-
-// obtener documento residentes
-window.data.getDataResident = () => {
-  let numDepto = document.getElementById('toWhoVisitor').value;
-  console.log(numDepto);
-
-  const firestore = firebase.firestore(); const settings = {
-    timestampsInSnapshots: true
-  };
-  firestore.settings(settings);
-
-  let docRef = firestore.collection('resident').doc(numDepto);
-
-  docRef.get().then((doc) => {
-    if (doc.exists) {
-      console.log('Document data:', doc.data());
-      window.view.insertResident(doc.data());
-    } else {
-      console.log('No such document!');
-    }
-  }).catch((error) => {
-    console.log('Error getting document:', error);
-  });
-};
-
-
-// obtener colección de visitantes 
+// Obtener colección de visitantes
 window.data.readCollectionVisitors = () => {
-  const firestore = firebase.firestore();
-  const settings = {
-    timestampsInSnapshots: true
-  };
-  firestore.settings(settings);
-  return firestore.collection('visitors').orderBy('date', 'desc').limit(20).get().then((allVisitors) => {
-    return allVisitors;
-  });
+  return fetch('/api/visitors')
+    .then(response => response.json())
+    .then(allVisitors => {
+      return allVisitors;
+    })
+    .catch((error) => {
+      console.error('Error getting visitor data:', error);
+    });
 };

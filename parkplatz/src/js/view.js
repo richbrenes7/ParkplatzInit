@@ -37,8 +37,8 @@ window.view.visitor = () => {
           <label for="nameVisitor" class="mt-2 colorTextLabel">Nombre del visitante</label>
           <input type="text" id="nameVisitor" placeholder="Nombre Visitante" required>
 
-          <label for="rutVisitor" class="colorTextLabel">RUT del visitante</label>
-          <input type="text" id="rutVisitor" placeholder="RUT" required>
+          <label for="rutVisitor" class="colorTextLabel">DPI del visistante</label>
+          <input type="text" id="rutVisitor" placeholder="DPI" required>
 
           <label for="numCompanionsVisitor" class="colorTextLabel">Número de acompañantes</label>
           <input type="text" id="numCompanionsVisitor" placeholder="Número" required>
@@ -74,46 +74,40 @@ window.view.resident = () => {
 
 
 // escritura datos visitantes en tabla
-window.view.listVisitors = () => {
-  let htmlListVisitors =
-    `<div class="contTable">
-    <table class="table table-bordered table-hover bg-white tableStyle">
-    <thead class="colorTable">
-      <tr>
-        <th scope="col" class="text-center text-white lead">Depto a visitar</th>
-        <th scope="col" class="text-center text-white lead">Nombre Visitante</th>
-        <th scope="col" class="text-center text-white lead">Rut</th>
-        <th scope="col" class="text-center text-white lead">N° Acompañantes</th>
-        <th scope="col" class="text-center text-white lead">Fecha</th>
-        <th scope="col" class="text-center text-white lead">Hora</th>
-        <th scope="col" class="text-center text-white lead">Foto</th>
-      </tr>
-  </thead>`;
-  const allVisitors = window.controller.tableCollectionVisitors();
-  allVisitors.then(visitors => {
-    visitors.forEach(visitor => {
-      const vis = visitor.data();
+window.view.listVisitors = (allVisitors) => {
+  let htmlListVisitors = `<div class="contTable">
+  <table class="table table-bordered table-hover bg-white tableStyle">
+  <thead class="colorTable">
+    <tr>
+      <th scope="col" class="text-center text-white lead">Depto a visitar</th>
+      <th scope="col" class="text-center text-white lead">Nombre Visitante</th>
+      <th scope="col" class="text-center text-white lead">Rut</th>
+      <th scope="col" class="text-center text-white lead">N° Acompañantes</th>
+      <th scope="col" class="text-center text-white lead">Fecha</th>
+      <th scope="col" class="text-center text-white lead">Hora</th>
+      <th scope="col" class="text-center text-white lead">Foto</th>
+    </tr>
+</thead>`;
 
-      // formato fecha
+  allVisitors.forEach(visitor => {
+      const vis = visitor; // Asegúrate de que este objeto tenga la estructura correcta
+
+      // Formato de la fecha
       const optionsDate = {
-        // weekday: 'short',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
       };
-      let dateFormat = vis.date.toDate();
-      let date = dateFormat.toLocaleDateString('es-CL', optionsDate);
+      let date = new Date(vis.date).toLocaleDateString('es-CL', optionsDate);
 
-      // formato hora
+      // Formato de la hora
       const optionsHour = {
-        hour: 'numeric',
-        minute: 'numeric'
+          hour: 'numeric',
+          minute: 'numeric'
       };
-      let hour = dateFormat.toLocaleTimeString('es-CL', optionsHour);
+      let hour = new Date(vis.date).toLocaleTimeString('es-CL', optionsHour);
 
-
-      htmlListVisitors +=
-        `<tbody>
+      htmlListVisitors += `<tbody>
       <tr>
       <td class="text-center">${vis.numberDept}</td>
       <td class="text-center">${vis.name}</td>
@@ -124,13 +118,11 @@ window.view.listVisitors = () => {
       <td class="text-center"><button class="btn btn-warning text-white shadowStyle" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${vis.image}')">Ver</button></td>
       </tr>
       </tbody>`;
-    });
-    let divListVisitors = document.getElementById('container');
-    divListVisitors.innerHTML = htmlListVisitors +
-      '</table> </div>';
   });
-};
 
+  let divListVisitors = document.getElementById('container');
+  divListVisitors.innerHTML = htmlListVisitors + '</table> </div>';
+};
 
 // modal foto visitante
 window.view.photoVisitModal = (image) => {

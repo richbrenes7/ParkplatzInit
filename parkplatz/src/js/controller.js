@@ -67,7 +67,14 @@ window.controller.dataInformationResident = () => {
 
 // comunica data de colleccion de visitantes con escritura
 window.controller.tableCollectionVisitors = () => {
-  return window.data.readCollectionVisitors();
+  // Esto ahora llama a la función que usa fetch en lugar de Firebase
+  window.data.readCollectionVisitors()
+      .then(allVisitors => {
+          window.view.listVisitors(allVisitors);  // Pasa los datos obtenidos a la vista
+      })
+      .catch(error => {
+          console.error('Error fetching visitors: ', error);
+      });
 };
 
 
@@ -75,6 +82,7 @@ window.controller.tableCollectionVisitors = () => {
 window.controller.performCapture = () => {
   let player = document.getElementById('player');
   let snapshotCanvas = document.getElementById('snapshot');
+  let dataURL = snapshotCanvas.toDataURL(); // dataURL contiene la imagen en formato Base64
   let captureButton = document.getElementById('capture');
   let newCapture = document.getElementById('newCapture');
   let videoTracks;

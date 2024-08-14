@@ -37,8 +37,8 @@ window.view.visitor = () => {
           <label for="nameVisitor" class="mt-2 colorTextLabel">Nombre del visitante</label>
           <input type="text" id="nameVisitor" placeholder="Nombre Visitante" required>
 
-          <label for="rutVisitor" class="colorTextLabel">RUT del visitante</label>
-          <input type="text" id="rutVisitor" placeholder="RUT" required>
+          <label for="rutVisitor" class="colorTextLabel">DPI del visitante</label>
+          <input type="text" id="rutVisitor" placeholder="DPI" required>
 
           <label for="numCompanionsVisitor" class="colorTextLabel">Número de acompañantes</label>
           <input type="text" id="numCompanionsVisitor" placeholder="Número" required>
