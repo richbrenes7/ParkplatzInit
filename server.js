@@ -24,9 +24,9 @@ async function connectToDatabase() {
 
 connectToDatabase();
 
-// Middleware para manejar JSON
-app.use(express.json());
-app.use(bodyParser.json());
+// Middleware para manejar JSON con un límite mayor
+app.use(express.json({ limit: '5mb' })); // Aumentar el límite a 10MB o más si es necesario
+app.use(bodyParser.json({ limit: '5mb' })); // Ajustar también el límite de bodyParser
 
 // Definir los esquemas y modelos de MongoDB
 const visitorSchema = new mongoose.Schema({
@@ -56,7 +56,7 @@ app.post('/api/visitors', async (req, res) => {
         const newVisitor = new Visitor({
             numberDept: req.body.numberDept,
             name: req.body.name,
-            dpi: req.body.dpi, // Asegúrate de que este campo está presente y es numérico
+            dpi: req.body.dpi, 
             companions: req.body.companions,
             image: req.body.image
         });
@@ -67,7 +67,6 @@ app.post('/api/visitors', async (req, res) => {
         res.status(500).send('Error al agregar visitante');
     }
 });
-
 
 app.get('/api/visitors', async (req, res) => {
     try {
@@ -81,13 +80,18 @@ app.get('/api/visitors', async (req, res) => {
 
 app.put('/api/residents/:id', async (req, res) => {
     try {
-        const resident = await Resident.findOneAndUpdate({ numberDept: req.params.id }, req.body, { new: true });
-        res.send(resident);
+        const resident = await Resident.findOneAndUpdate(
+            { numberDept: req.params.id },
+            req.body,
+            { new: true }
+        );
+        res.json(resident);  // Asegúrate de enviar una respuesta JSON válida aquí
     } catch (error) {
         console.error('Error al actualizar residente:', error.message);
-        res.status(500).send('Error al actualizar residente');
+        res.status(500).json({ error: 'Error al actualizar residente' });  // Enviar un error en formato JSON
     }
 });
+
 
 app.get('/api/residents/:id', async (req, res) => {
     try {
@@ -112,4 +116,4 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
+//Para guardar19:50
