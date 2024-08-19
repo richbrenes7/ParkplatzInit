@@ -7,11 +7,9 @@ import AgentDashboard from './components/AgentDashboard';
 import Login from './components/Login';
 import ForgotPassword from './components/ForgotPassword';
 import UserDashboard from './components/UserDashboard';
+import ProtectedRoute from './components/ProtectedRoute';  // Importa el componente ProtectedRoute
 
 function App() {
-    // Verifica si el token de autenticación está almacenado en localStorage
-    const isAuthenticated = !!localStorage.getItem('token');
-
     return (
         <Router>
             <Routes>
@@ -21,36 +19,28 @@ function App() {
                 {/* Ruta para la página de recuperación de contraseña */}
                 <Route path="/forgot-password" element={<ForgotPassword />} />
 
-                {/* Ruta para el dashboard del administrador, con redirección si no está autenticado */}
+                {/* Ruta para el dashboard del administrador */}
                 <Route
                     path="/admin-dashboard"
-                    element={
-                        isAuthenticated ? <AdminDashboard /> : <Navigate to="/login" />
-                    }
+                    element={<ProtectedRoute component={AdminDashboard} requiredRole="Administrador" />}
                 />
 
-                {/* Ruta para el dashboard del residente, con redirección si no está autenticado */}
+                {/* Ruta para el dashboard del residente */}
                 <Route
                     path="/resident-dashboard"
-                    element={
-                        isAuthenticated ? <ResidentDashboard /> : <Navigate to="/login" />
-                    }
+                    element={<ProtectedRoute component={ResidentDashboard} requiredRole="Residente" />}
                 />
 
-                {/* Ruta para el dashboard del agente, con redirección si no está autenticado */}
+                {/* Ruta para el dashboard del agente */}
                 <Route
                     path="/agent-dashboard"
-                    element={
-                        isAuthenticated ? <AgentDashboard /> : <Navigate to="/login" />
-                    }
+                    element={<ProtectedRoute component={AgentDashboard} requiredRole="Agente" />}
                 />
 
-                {/* Ruta para el dashboard del usuario, con redirección si no está autenticado */}
+                {/* Ruta para el dashboard del usuario */}
                 <Route
                     path="/user-dashboard"
-                    element={
-                        isAuthenticated ? <UserDashboard /> : <Navigate to="/login" />
-                    }
+                    element={<ProtectedRoute component={UserDashboard} />}
                 />
 
                 {/* Redirige cualquier otra ruta no definida a la página de login */}

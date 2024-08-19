@@ -1,66 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// src/components/ResidentDashboard.js
+import React, { useEffect, useState } from 'react';
 
-function ResidentDashboard() {
+const ResidentDashboard = () => {
     const [visits, setVisits] = useState([]);
-    const [visitorName, setVisitorName] = useState('');
-    const [visitDate, setVisitDate] = useState('');
-    const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/login');
-    };
     useEffect(() => {
-        // Obtener visitas del residente
-        axios.get('/api/resident/visits')
-            .then(response => setVisits(response.data))
+        // Llama a la API para obtener las visitas pendientes
+        fetch('/api/visits/pending')
+            .then(response => response.json())
+            .then(data => setVisits(data))
             .catch(error => console.error('Error fetching visits:', error));
     }, []);
 
-    const handleAcceptVisit = (id) => {
-        axios.post(`/api/resident/accept-visit/${id}`)
-            .then(() => {
-                setVisits(visits.map(visit => 
-                    visit._id === id ? { ...visit, status: 'Accepted' } : visit
-                ));
+    const handleAccept = (visitId) => {
+        // Lógica para aceptar la visita
+        fetch(`/api/visits/${visitId}/accept`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                // Actualiza el estado de las visitas
+                setVisits(visits.map(visit => visit.id === visitId ? data : visit));
             })
             .catch(error => console.error('Error accepting visit:', error));
     };
 
-    const handleScheduleVisit = () => {
-        axios.post('/api/resident/schedule-visit', { visitorName, visitDate })
-            .then(response => {
-                setVisits([...visits, response.data]);
-                setVisitorName('');
-                setVisitDate('');
+    const handleReject = (visitId) => {
+        // Lógica para rechazar la visita
+        fetch(`/api/visits/${visitId}/reject`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                // Actualiza el estado de las visitas
+                setVisits(visits.filter(visit => visit.id !== visitId));
             })
-            .catch(error => console.error('Error scheduling visit:', error));
+            .catch(error => console.error('Error rejecting visit:', error));
     };
 
     return (
         <div>
-            <h1>Resident Dashboard</h1>
-            <input type="text" placeholder="Visitor Name" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} />
-            <input type="date" value={visitDate} onChange={(e) => setVisitDate(e.target.value)} />
-            <button onClick={handleScheduleVisit}>Schedule Visit</button>
-            <h1>Resident Dashboard</h1>
-            <button onClick={handleLogout}>Logout</button>
-            {/* Resto del contenido del dashboard */}
-            <h2>Scheduled Visits</h2>
+            <h1>Visitas Pendientes</h1>
             <ul>
                 {visits.map(visit => (
-                    <li key={visit._id}>
-                        {visit.visitorName} on {visit.visitDate} - {visit.status}
-                        {visit.status === 'Pending' && (
-                            <button onClick={() => handleAcceptVisit(visit._id)}>Accept</button>
-                        )}
+                    <li key={visit.id}>
+                        {visit.name} - {visit.date}
+                        <button onClick={() => handleAccept(visit.id)}>Aceptar</button>
+                        <button onClick={() => handleReject(visit.id)}>Rechazar</button>
                     </li>
                 ))}
             </ul>
         </div>
     );
-}
+};
 
 export default ResidentDashboard;

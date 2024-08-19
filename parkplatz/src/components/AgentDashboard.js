@@ -1,38 +1,41 @@
+// src/components/AgentDashboard.js
+import React, { useEffect, useState } from 'react';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+const AgentDashboard = () => {
+    const [residents, setResidents] = useState([]);
+    const [visitors, setVisitors] = useState([]);
 
-function AgentDashboard() {
-    const [visits, setVisits] = useState([]);
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/login');
-    };
     useEffect(() => {
-        // Obtener todas las visitas
-        axios.get('/api/agent/visits')
-            .then(response => setVisits(response.data))
-            .catch(error => console.error('Error fetching visits:', error));
+        // Llama a la API para obtener los residentes
+        fetch('/api/residents')
+            .then(response => response.json())
+            .then(data => setResidents(data))
+            .catch(error => console.error('Error fetching residents:', error));
+
+        // Llama a la API para obtener los visitantes
+        fetch('/api/visitors')
+            .then(response => response.json())
+            .then(data => setVisitors(data))
+            .catch(error => console.error('Error fetching visitors:', error));
     }, []);
 
     return (
         <div>
-            <h1>Agent Dashboard</h1>
-            <button onClick={handleLogout}>Logout</button>
-
-            <h2>Visit Activity</h2>
+            <h1>Información de Residentes</h1>
             <ul>
-                {visits.map(visit => (
-                    <li key={visit._id}>
-                        {visit.visitorName} - Accepted by {visit.residentName} on {visit.acceptedAt}
-                    </li>
+                {residents.map(resident => (
+                    <li key={resident.id}>{resident.name} - {resident.address}</li>
+                ))}
+            </ul>
+
+            <h1>Información de Visitantes</h1>
+            <ul>
+                {visitors.map(visitor => (
+                    <li key={visitor.id}>{visitor.name} - {visitor.date}</li>
                 ))}
             </ul>
         </div>
     );
-}
+};
 
 export default AgentDashboard;

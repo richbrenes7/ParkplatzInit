@@ -9,7 +9,7 @@ function ForgotPassword() {
     const handleForgotPassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/forgot-password', { email });
+            await axios.post('/api/forgot-password', { email });
             setMessage('Si tu correo está registrado, recibirás instrucciones para recuperar tu contraseña.');
         } catch (error) {
             console.error('Error during password recovery:', error);

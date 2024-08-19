@@ -1,6 +1,7 @@
 window.controller = {};
 
 window.onload = () => {
+  console.log("Cargando la vista de visitantes...");
   window.view.visitor();
   window.controller.performCapture();
 };
@@ -9,7 +10,7 @@ window.onload = () => {
 window.controller.dataInformationVisitor = () => {
   const toWhoVisitor = document.getElementById('toWhoVisitor').value;
   const nameVisitor = document.getElementById('nameVisitor').value;
-  const dpiVisitor = document.getElementById('rutVisitor').value;  // Cambiado a 'dpiVisitor'
+  const dpiVisitor = document.getElementById('rutVisitor').value;
   const numCompanionsVisitor = document.getElementById('numCompanionsVisitor').value;
 
   let snapshotCanvas = document.getElementById('snapshot');
@@ -19,17 +20,18 @@ window.controller.dataInformationVisitor = () => {
     date: new Date(),
     numberDept: toWhoVisitor,
     name: nameVisitor,
-    dpi: dpiVisitor,  // Asegurarse de que el campo 'dpi' se guarda correctamente
+    dpi: dpiVisitor,
     companions: numCompanionsVisitor,
-    image: dataURL  // Guarda la imagen en base64
+    image: dataURL
   };
 
+  console.log("Datos del visitante a enviar:", dataVisitor);
   window.data.collectionDataVisitor(dataVisitor);
 
   // Limpiar los campos de entrada después de guardar los datos
   document.getElementById('toWhoVisitor').value = '';
   document.getElementById('nameVisitor').value = '';
-  document.getElementById('rutVisitor').value = ''; // Este campo es para el 'dpi'
+  document.getElementById('rutVisitor').value = '';
   document.getElementById('numCompanionsVisitor').value = '';
 
   window.data.readCollectionVisitors();
@@ -45,15 +47,47 @@ window.controller.dataInformationResident = () => {
   const emailResident = document.getElementById('emailResident').value;
 
   const dataResident = {
-    numberDept: numberDeptResident,
-    nameResident: nameResident,
-    email: emailResident,
-    resident2: resident2,
-    resident3: resident3,
-    resident4: resident4,
+      numberDept: numberDeptResident,
+      nameResident: nameResident,
+      email: emailResident,
+      resident2: resident2,
+      resident3: resident3,
+      resident4: resident4,
   };
 
-  window.data.collectionDataResident(dataResident);
+  // Intentar directamente una operación PUT
+  fetch(`/api/residents/${numberDeptResident}`, {
+      method: 'PUT',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataResident)
+  })
+  .then(response => {
+      if (!response.ok) {
+          // Si el residente no existe, lo creamos
+          if (response.status === 404) {
+              return fetch('/api/residents', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(dataResident)
+              });
+          } else {
+              throw new Error('Error al actualizar residente');
+          }
+      }
+      return response.json();
+  })
+  .then(data => {
+      alert('Residente creado/actualizado correctamente.');
+      console.log('Datos del residente guardados:', data);
+  })
+  .catch(error => {
+      console.error('Error al crear/actualizar el residente:', error);
+      alert('Hubo un error al crear/actualizar el residente. Por favor, inténtalo de nuevo.');
+  });
 
   // Limpiar los campos de entrada después de guardar los datos
   document.getElementById('numberDeptResident').value = '';
@@ -64,8 +98,10 @@ window.controller.dataInformationResident = () => {
   document.getElementById('resident4').value = '';
 };
 
+
 // Comunica data de colección de visitantes con escritura
 window.controller.tableCollectionVisitors = () => {
+  console.log("Recuperando datos de visitantes...");
   return window.data.readCollectionVisitors();
 };
 
@@ -78,7 +114,7 @@ window.controller.performCapture = () => {
   let videoTracks;
 
   let handleSuccess = (stream) => {
-    // Adjunta el flujo de video al elemento de video y autoplay
+    console.log("Cámara activada");
     player.srcObject = stream;
     videoTracks = stream.getVideoTracks();
   };
@@ -86,6 +122,7 @@ window.controller.performCapture = () => {
   captureButton.addEventListener('click', () => {
     let context = snapshotCanvas.getContext('2d');
     context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+    console.log("Foto capturada");
 
     // Detener todos los flujos de video
     videoTracks.forEach((track) => {
@@ -94,21 +131,27 @@ window.controller.performCapture = () => {
   });
 
   newCapture.addEventListener('click', () => {
+    console.log("Tomando nueva captura");
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(handleSuccess);
   });
 
   navigator.mediaDevices.getUserMedia({ video: true })
-    .then(handleSuccess);
+    .then(handleSuccess)
+    .catch(error => {
+      console.error("Error al activar la cámara:", error);
+    });
 };
 
 // Obtener datos de residente
 window.controller.infoResident = () => {
+  console.log("Obteniendo datos de residentes...");
   window.data.getDataResident();
 };
 
 // Recarga de vista agregar visitante
 window.controller.viewVisitor = () => {
+  console.log("Cargando formulario de visitante...");
   window.view.visitor();
   window.controller.performCapture();
 };
