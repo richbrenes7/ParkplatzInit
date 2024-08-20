@@ -155,3 +155,27 @@ window.controller.viewVisitor = () => {
   window.view.visitor();
   window.controller.performCapture();
 };
+
+// Actualizar el estado de la visita
+window.controller.updateVisitorStatus = (visitorId, status) => {
+  fetch(`/api/visitors/${visitorId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ status })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Error al actualizar el estado de la visita');
+    }
+    return response.json();
+  })
+  .then(updatedVisitor => {
+    alert(`Visita ${status.toLowerCase()} correctamente.`);
+    window.controller.tableCollectionVisitors(); // Refresca la lista de visitas
+  })
+  .catch(error => {
+    console.error('Error al actualizar el estado de la visita:', error);
+  });
+};

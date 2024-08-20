@@ -70,7 +70,7 @@ window.view.resident = () => {
     </div>`;
 };
 
-// Escritura de datos visitantes en tabla
+// Escritura de datos visitantes en tabla con opciones de aceptar/rechazar
 window.view.listVisitors = () => {
   let htmlListVisitors = `
     <div class="contTable">
@@ -84,6 +84,8 @@ window.view.listVisitors = () => {
             <th scope="col" class="text-center text-white lead">Fecha</th>
             <th scope="col" class="text-center text-white lead">Hora</th>
             <th scope="col" class="text-center text-white lead">Foto</th>
+            <th scope="col" class="text-center text-white lead">Estado</th>
+            <th scope="col" class="text-center text-white lead">Acciones</th>
           </tr>
         </thead>`;
   
@@ -92,21 +94,9 @@ window.view.listVisitors = () => {
     visitors.forEach(visitor => {
       const data = visitor;
 
-      // Formato de fecha
-      const optionsDate = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      };
-      let dateFormat = new Date(data.date);
-      let date = dateFormat.toLocaleDateString('es-CL', optionsDate);
-
-      // Formato de hora
-      const optionsHour = {
-        hour: 'numeric',
-        minute: 'numeric'
-      };
-      let hour = dateFormat.toLocaleTimeString('es-CL', optionsHour);
+      // Formato de fecha y hora
+      const date = new Date(data.date).toLocaleDateString('es-CL');
+      const hour = new Date(data.date).toLocaleTimeString('es-CL');
 
       htmlListVisitors += `
       <tbody>
@@ -118,6 +108,11 @@ window.view.listVisitors = () => {
       <td class="text-center">${date}</td>
       <td class="text-center">${hour}</td>
       <td class="text-center"><button class="btn btn-warning text-white shadowStyle" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${data.image}')">Ver</button></td>
+      <td class="text-center">${data.status}</td>
+      <td class="text-center">
+        <button class="btn btn-success text-white shadowStyle" onclick="window.controller.updateVisitorStatus('${data._id}', 'Aceptada')">Aceptar</button>
+        <button class="btn btn-danger text-white shadowStyle" onclick="window.controller.updateVisitorStatus('${data._id}', 'Rechazada')">Rechazar</button>
+      </td>
       </tr>
       </tbody>`;
     });

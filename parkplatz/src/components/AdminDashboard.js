@@ -9,7 +9,15 @@ function AdminDashboard() {
   const [role, setRole] = useState('Residente');
   const [email, setEmail] = useState('');
   const [editingUserId, setEditingUserId] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+
+  // Campos para residentes
+  const [numberDept, setNumberDept] = useState('');
+  const [nameResident, setNameResident] = useState('');
+  const [resident2, setResident2] = useState({ name: '', phone: '' });
+  const [resident3, setResident3] = useState({ name: '', phone: '' });
+  const [resident4, setResident4] = useState({ name: '', phone: '' });
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -26,6 +34,13 @@ function AdminDashboard() {
         }
       })
       .catch(error => console.error('Error fetching users:', error));
+
+    // Verificar si el usuario es administrador
+    axios.get('/api/check-role')
+      .then(response => {
+        setIsAdmin(response.data.role === 'Administrador');
+      })
+      .catch(error => console.error('Error verifying role:', error));
   }, []);
 
   const handleAddUser = () => {
@@ -43,7 +58,7 @@ function AdminDashboard() {
   const handleEditUser = (user) => {
     setUsername(user.username || '');
     setEmail(user.email || '');
-    setPassword('');  // No se debe precargar la contraseña
+    setPassword(''); // No se debe precargar la contraseña
     setRole(user.role || 'Residente');
     setEditingUserId(user._id);
   };
@@ -69,6 +84,28 @@ function AdminDashboard() {
       .catch(error => console.error('Error deleting user:', error));
   };
 
+  // Manejo del ingreso de residentes
+  const handleAddResident = () => {
+    const residentData = {
+      numberDept,
+      nameResident,
+      resident2,
+      resident3,
+      resident4
+    };
+
+    axios.post('/api/residents', residentData)
+      .then(response => {
+        setNumberDept('');
+        setNameResident('');
+        setResident2({ name: '', phone: '' });
+        setResident3({ name: '', phone: '' });
+        setResident4({ name: '', phone: '' });
+        console.log('Residente agregado:', response.data);
+      })
+      .catch(error => console.error('Error adding resident:', error));
+  };
+
   return (
     <div>
       <h1>Admin Dashboard</h1>
@@ -76,23 +113,23 @@ function AdminDashboard() {
         type="text" 
         placeholder="Username" 
         value={username} 
-        onChange={(e) => setUsername(e.target.value || '')} // Asegúrate de que nunca se vuelva undefined
+        onChange={(e) => setUsername(e.target.value || '')}
       />
       <input 
         type="email" 
         placeholder="Email" 
         value={email} 
-        onChange={(e) => setEmail(e.target.value || '')} // Asegúrate de que nunca se vuelva undefined
+        onChange={(e) => setEmail(e.target.value || '')}
       />
       <input 
         type="password" 
         placeholder="Password" 
         value={password} 
-        onChange={(e) => setPassword(e.target.value || '')} // Asegúrate de que nunca se vuelva undefined
+        onChange={(e) => setPassword(e.target.value || '')}
       />
       <select 
         value={role} 
-        onChange={(e) => setRole(e.target.value || 'Residente')} // Asegúrate de que nunca se vuelva undefined
+        onChange={(e) => setRole(e.target.value || 'Residente')}
       >
         <option value="Residente">Residente</option>
         <option value="Guardia">Guardia</option>
@@ -104,6 +141,62 @@ function AdminDashboard() {
         <button onClick={handleAddUser}>Add User</button>
       )}
       <button onClick={handleLogout}>Logout</button>
+
+      {isAdmin && (
+        <div>
+          <h2>Agregar Residente</h2>
+          <input 
+            type="text" 
+            placeholder="Número de Departamento" 
+            value={numberDept} 
+            onChange={(e) => setNumberDept(e.target.value || '')}
+          />
+          <input 
+            type="text" 
+            placeholder="Nombre del Residente Principal" 
+            value={nameResident} 
+            onChange={(e) => setNameResident(e.target.value || '')}
+          />
+          <input 
+            type="text" 
+            placeholder="Nombre Residente 2" 
+            value={resident2.name} 
+            onChange={(e) => setResident2({ ...resident2, name: e.target.value })}
+          />
+          <input 
+            type="text" 
+            placeholder="Teléfono Residente 2" 
+            value={resident2.phone} 
+            onChange={(e) => setResident2({ ...resident2, phone: e.target.value })}
+          />
+          <input 
+            type="text" 
+            placeholder="Nombre Residente 3" 
+            value={resident3.name} 
+            onChange={(e) => setResident3({ ...resident3, name: e.target.value })}
+          />
+          <input 
+            type="text" 
+            placeholder="Teléfono Residente 3" 
+            value={resident3.phone} 
+            onChange={(e) => setResident3({ ...resident3, phone: e.target.value })}
+          />
+          <input 
+            type="text" 
+            placeholder="Nombre Residente 4" 
+            value={resident4.name} 
+            onChange={(e) => setResident4({ ...resident4, name: e.target.value })}
+          />
+          <input 
+            type="text" 
+            placeholder="Teléfono Residente 4" 
+            value={resident4.phone} 
+            onChange={(e) => setResident4({ ...resident4, phone: e.target.value })}
+          />
+          <button onClick={handleAddResident}>Agregar Residente</button>
+        </div>
+      )}
+
       <h2>Users</h2>
       <ul>
         {Array.isArray(users) ? (

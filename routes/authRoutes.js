@@ -43,7 +43,8 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Usuario no encontrado' });
         }
 
-        const isMatch = await user.matchPassword(password);
+        // Comparar la contraseña en texto plano
+        const isMatch = user.password === password;
         if (!isMatch) {
             return res.status(400).json({ message: 'Contraseña incorrecta' });
         }

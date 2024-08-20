@@ -4,7 +4,9 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');  // Importa CORS
+const cors = require('cors');
+
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -15,8 +17,6 @@ app.use(cors());
 async function connectToDatabase() {
     try {
         await mongoose.connect(process.env.MONGO_URI || process.env.MONGO_URI1, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000
         });
         console.log('MongoDB connected...');
@@ -32,6 +32,9 @@ connectToDatabase();
 app.use(express.json({ limit: '5mb' }));
 app.use(bodyParser.json({ limit: '5mb' }));
 
+// Usar las rutas de autenticación antes de cualquier otra ruta
+app.use('/api', authRoutes);
+
 // Definir los esquemas y modelos de MongoDB
 const visitorSchema = new mongoose.Schema({
     numberDept: String,
@@ -39,6 +42,7 @@ const visitorSchema = new mongoose.Schema({
     dpi: String,
     companions: Number,
     image: String,
+    status: { type: String, default: 'Pendiente' }, // Agrega el campo status
     date: { type: Date, default: Date.now }
 });
 
@@ -53,6 +57,64 @@ const residentSchema = new mongoose.Schema({
 
 const Visitor = mongoose.model('Visitor', visitorSchema);
 const Resident = mongoose.model('Resident', residentSchema);
+const Visit = require('./models/Visit');
+
+// Rutas para la gestión de visitas
+app.get('/api/visits/pending', async (req, res) => {
+    try {
+        const visits = await Visit.find({ status: 'Pendiente' }).populate('residente');
+        res.json(visits);
+    } catch (error) {
+        console.error('Error al obtener visitas pendientes:', error.message);
+        res.status(500).json({ error: 'Error al obtener visitas pendientes' });
+    }
+});
+
+app.post('/api/visits/:id/accept', async (req, res) => {
+    try {
+        const visit = await Visit.findByIdAndUpdate(req.params.id, { status: 'Aceptada' }, { new: true });
+        res.json(visit);
+    } catch (error) {
+        console.error('Error al aceptar la visita:', error.message);
+        res.status(500).json({ error: 'Error al aceptar la visita' });
+    }
+});
+
+app.post('/api/visits/:id/reject', async (req, res) => {
+    try {
+        const visit = await Visit.findByIdAndUpdate(req.params.id, { status: 'Rechazada' }, { new: true });
+        res.json({ message: 'Visita rechazada' });
+    } catch (error) {
+        console.error('Error al rechazar la visita:', error.message);
+        res.status(500).json({ error: 'Error al rechazar la visita' });
+    }
+});
+
+// Rutas para la gestión de visitas
+app.post('/api/visits/schedule', async (req, res) => {
+    try {
+        const { visitante, residenteId, numeroDept, fecha, registradoPorId, observaciones } = req.body;
+
+        if (!mongoose.Types.ObjectId.isValid(residenteId) || !mongoose.Types.ObjectId.isValid(registradoPorId)) {
+            return res.status(400).json({ error: 'Residente ID o registradoPorId no son ObjectIDs válidos.' });
+        }
+
+        const newVisit = new Visit({
+            visitante,
+            residente: residenteId,
+            numeroDept,
+            fecha,
+            registradoPorId,
+            observaciones
+        });
+
+        const savedVisit = await newVisit.save();
+        res.status(201).json(savedVisit);
+    } catch (error) {
+        console.error('Error al agendar la visita:', error.message);
+        res.status(500).json({ error: 'Error al agendar la visita' });
+    }
+});
 
 // Rutas para la gestión de visitantes
 app.post('/api/visitors', async (req, res) => {
@@ -79,15 +141,18 @@ app.get('/api/visitors', async (req, res) => {
 // Rutas para la gestión de residentes
 app.post('/api/residents', async (req, res) => {
     try {
-        console.log('Datos del nuevo residente:', req.body);
+        const { numberDept, nameResident, email, resident2, resident3, resident4, adminCreated } = req.body;
 
-        // Verifica si el residente ya existe para evitar duplicados
-        const existingResident = await Resident.findOne({ numberDept: req.body.numberDept });
-        if (existingResident) {
-            return res.status(400).json({ error: 'Residente ya existe' });
-        }
+        const newResident = new Resident({
+            numberDept,
+            nameResident,
+            email,
+            resident2,
+            resident3,
+            resident4,
+            adminCreated // ID del usuario administrador que creó el residente
+        });
 
-        const newResident = new Resident(req.body);
         const savedResident = await newResident.save();
         res.status(201).json(savedResident);
     } catch (error) {
@@ -98,7 +163,7 @@ app.post('/api/residents', async (req, res) => {
 
 app.put('/api/residents/:id', async (req, res) => {
     try {
-        console.log(Intentando actualizar residente con ID: ${req.params.id});
+        console.log(`Intentando actualizar residente con ID: ${req.params.id}`);
         console.log('Datos recibidos:', req.body);
 
         const resident = await Resident.findOneAndUpdate(
@@ -119,7 +184,7 @@ app.put('/api/residents/:id', async (req, res) => {
 
 app.get('/api/residents/:id', async (req, res) => {
     try {
-        console.log(Buscando residente con ID: ${req.params.id});
+        console.log(`Buscando residente con ID: ${req.params.id}`);
 
         const resident = await Resident.findOne({ numberDept: req.params.id });
         if (!resident) {
@@ -144,7 +209,5 @@ app.get('*', (req, res) => {
 // Iniciar el servidor en el puerto 8081
 const PORT = 8081;
 app.listen(PORT, () => {
-    console.log(Server running on port ${PORT});
+    console.log(`Server running on port ${PORT}`);
 });
-
-//guardado2144
