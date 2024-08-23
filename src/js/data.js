@@ -76,9 +76,9 @@ window.data.getDataResident = () => {
       return response.json();
     })
     .then(doc => {
-      if (doc) {
+      if (doc && doc.length > 0) {
         console.log('Resident data:', doc);
-        window.view.insertResident(doc);
+        window.view.insertResident(doc[0]); // Inserta el primer residente encontrado
       } else {
         console.log('No se encontró el documento!');
       }
@@ -88,6 +88,7 @@ window.data.getDataResident = () => {
       alert('Hubo un problema al obtener los datos del residente. Por favor, inténtalo de nuevo.');
     });
 };
+
 
 
 // Obtener colección de visitantes

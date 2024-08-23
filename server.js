@@ -61,15 +61,17 @@ const Visitor = mongoose.models.Visitor || mongoose.model('Visitor', {
 const Visit = require('./models/Visit');
 
 // Rutas para la gestión de visitas
-app.get('/api/visits/pending', async (req, res) => {
+app.get('/api/visitors/pending', async (req, res) => {
     try {
-        const visits = await Visit.find({ status: 'Pendiente' }).populate('residente');
-        res.json(visits);
+        const visitors = await Visitor.find({ status: 'Pendiente' }).sort({ date: -1 });
+        res.json(visitors);
     } catch (error) {
         console.error('Error al obtener visitas pendientes:', error.message);
         res.status(500).json({ error: 'Error al obtener visitas pendientes' });
     }
 });
+
+
 
 app.post('/api/visits/:id/accept', async (req, res) => {
     try {
@@ -95,7 +97,7 @@ app.post('/api/visits/schedule', async (req, res) => {
     try {
         const { visitante, residenteId, numeroDept, dpi, numCompanions, fecha, registradoPorId, observaciones } = req.body;
 
-        if (!mongoose.Types.ObjectId.isValid(residenteId) || !registradoPorId) {
+        if (!mongoose.Types.ObjectId.isValid(residenteId) || !mongoose.Types.ObjectId.isValid(registradoPorId)) {
             return res.status(400).json({ error: 'ID inválido' });
         }
 
@@ -106,7 +108,8 @@ app.post('/api/visits/schedule', async (req, res) => {
             numCompanions,
             fecha,
             registradoPorId,
-            observaciones
+            observaciones,
+            numberDept: numeroDept // Aseguramos que este campo sea también guardado
         });
 
         const savedVisit = await newVisit.save();
@@ -225,11 +228,11 @@ app.put('/api/admin/users/:id', async (req, res) => {
     }
 });
 
-app.get('/api/residents/:apartmentId', async (req, res) => {
+app.get('/api/residents/:numberDept', async (req, res) => {
     try {
-        const { apartmentId } = req.params;
+        const { numberDept } = req.params;
 
-        const apartment = await Apartment.findById(apartmentId);
+        const apartment = await Apartment.findOne({ numberDept });
         if (!apartment) {
             return res.status(404).json({ error: 'Apartamento no encontrado' });
         }
@@ -240,6 +243,7 @@ app.get('/api/residents/:apartmentId', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener residentes' });
     }
 });
+
 
 app.get('/api/apartments', async (req, res) => {
     try {
