@@ -36,27 +36,28 @@ app.use(bodyParser.json({ limit: '5mb' }));
 app.use('/api', authRoutes);
 
 // Definir los esquemas y modelos de MongoDB
-const visitorSchema = new mongoose.Schema({
+const residentSchema = new mongoose.Schema({
+    nameResident: { type: String, required: true },
+    email: { type: String, required: true },
+    phoneNumber: { type: String, required: true }
+});
+
+const apartmentSchema = new mongoose.Schema({
+    numberDept: { type: String, required: true, unique: true },
+    residents: [residentSchema]
+});
+
+// Verificar si el modelo ya está definido para evitar el error OverwriteModelError
+const Apartment = mongoose.models.Apartment || mongoose.model('Apartment', apartmentSchema);
+const Visitor = mongoose.models.Visitor || mongoose.model('Visitor', {
     numberDept: String,
     name: String,
     dpi: String,
     companions: Number,
     image: String,
-    status: { type: String, default: 'Pendiente' }, // Agrega el campo status
+    status: { type: String, default: 'Pendiente' },
     date: { type: Date, default: Date.now }
 });
-
-const residentSchema = new mongoose.Schema({
-    numberDept: String,
-    nameResident: String,
-    email: String,
-    resident2: String,
-    resident3: String,
-    resident4: String
-});
-
-const Visitor = mongoose.model('Visitor', visitorSchema);
-const Resident = mongoose.model('Resident', residentSchema);
 const Visit = require('./models/Visit');
 
 // Rutas para la gestión de visitas
@@ -90,19 +91,19 @@ app.post('/api/visits/:id/reject', async (req, res) => {
     }
 });
 
-// Rutas para la gestión de visitas
 app.post('/api/visits/schedule', async (req, res) => {
     try {
-        const { visitante, residenteId, numeroDept, fecha, registradoPorId, observaciones } = req.body;
+        const { visitante, residenteId, numeroDept, dpi, numCompanions, fecha, registradoPorId, observaciones } = req.body;
 
-        if (!mongoose.Types.ObjectId.isValid(residenteId) || !mongoose.Types.ObjectId.isValid(registradoPorId)) {
-            return res.status(400).json({ error: 'Residente ID o registradoPorId no son ObjectIDs válidos.' });
+        if (!mongoose.Types.ObjectId.isValid(residenteId) || !registradoPorId) {
+            return res.status(400).json({ error: 'ID inválido' });
         }
 
         const newVisit = new Visit({
             visitante,
             residente: residenteId,
-            numeroDept,
+            dpi,
+            numCompanions,
             fecha,
             registradoPorId,
             observaciones
@@ -138,63 +139,115 @@ app.get('/api/visitors', async (req, res) => {
     }
 });
 
-// Rutas para la gestión de residentes
+// Rutas para la gestión de residentes y apartamentos
 app.post('/api/residents', async (req, res) => {
     try {
-        const { numberDept, nameResident, email, resident2, resident3, resident4, adminCreated } = req.body;
+        const { numberDept, nameResident, email, phoneNumber } = req.body;
 
-        const newResident = new Resident({
-            numberDept,
-            nameResident,
-            email,
-            resident2,
-            resident3,
-            resident4,
-            adminCreated // ID del usuario administrador que creó el residente
-        });
+        let apartment = await Apartment.findOne({ numberDept });
 
-        const savedResident = await newResident.save();
-        res.status(201).json(savedResident);
+        if (!apartment) {
+            apartment = new Apartment({ numberDept, residents: [] });
+        }
+
+        if (apartment.residents.length >= 3) {
+            return res.status(400).json({ error: 'El apartamento ya tiene el número máximo de residentes (3)' });
+        }
+
+        apartment.residents.push({ nameResident, email, phoneNumber });
+
+        const savedApartment = await apartment.save();
+        res.status(201).json(savedApartment);
     } catch (error) {
         console.error('Error al agregar residente:', error.message);
         res.status(500).send('Error al agregar residente');
     }
 });
 
-app.put('/api/residents/:id', async (req, res) => {
+app.put('/api/residents/:apartmentId/:residentId', async (req, res) => {
     try {
-        console.log(`Intentando actualizar residente con ID: ${req.params.id}`);
-        console.log('Datos recibidos:', req.body);
+        const { apartmentId, residentId } = req.params;
+        const { nameResident, email, phoneNumber } = req.body;
 
-        const resident = await Resident.findOneAndUpdate(
-            { numberDept: req.params.id },
-            req.body,
-            { new: true }
-        );
+        const apartment = await Apartment.findById(apartmentId);
+        if (!apartment) {
+            return res.status(404).json({ error: 'Apartamento no encontrado' });
+        }
+
+        const resident = apartment.residents.id(residentId);
         if (!resident) {
-            console.log('Residente no encontrado.');
             return res.status(404).json({ error: 'Residente no encontrado' });
         }
-        res.json(resident);
+
+        resident.nameResident = nameResident;
+        resident.email = email;
+        resident.phoneNumber = phoneNumber;
+
+        const savedApartment = await apartment.save();
+        res.json(savedApartment);
     } catch (error) {
         console.error('Error al actualizar residente:', error.message);
         res.status(500).json({ error: 'Error al actualizar residente' });
     }
 });
 
-app.get('/api/residents/:id', async (req, res) => {
-    try {
-        console.log(`Buscando residente con ID: ${req.params.id}`);
+app.put('/api/admin/users/:id', async (req, res) => {
+    const { id } = req.params;
+    const { username, email, password, role, apartment } = req.body;
 
-        const resident = await Resident.findOne({ numberDept: req.params.id });
-        if (!resident) {
-            console.log('Residente no encontrado.');
-            return res.status(404).json({ error: 'Residente no encontrado' });
+    try {
+        const user = await mongoose.models.User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
         }
-        res.json(resident);
+
+        user.username = username || user.username;
+        user.email = email || user.email;
+        user.role = role || user.role;
+
+        if (apartment) {
+            const apartmentObj = await Apartment.findById(apartment);
+            if (!apartmentObj) {
+                return res.status(400).json({ error: 'Apartamento no encontrado' });
+            }
+            user.apartment = apartment;
+        }
+
+        if (password) {
+            user.password = password;
+        }
+
+        await user.save();
+        res.json(user);
     } catch (error) {
-        console.error('Error al obtener residente:', error.message);
-        res.status(500).json({ error: 'Error al obtener residente' });
+        console.error('Error al actualizar usuario:', error.message);
+        res.status(500).json({ error: 'Error al actualizar usuario' });
+    }
+});
+
+app.get('/api/residents/:apartmentId', async (req, res) => {
+    try {
+        const { apartmentId } = req.params;
+
+        const apartment = await Apartment.findById(apartmentId);
+        if (!apartment) {
+            return res.status(404).json({ error: 'Apartamento no encontrado' });
+        }
+
+        res.json(apartment.residents);
+    } catch (error) {
+        console.error('Error al obtener residentes:', error.message);
+        res.status(500).json({ error: 'Error al obtener residentes' });
+    }
+});
+
+app.get('/api/apartments', async (req, res) => {
+    try {
+        const apartments = await Apartment.find();
+        res.json(apartments);
+    } catch (error) {
+        console.error('Error fetching apartments:', error.message);
+        res.status(500).json({ error: 'Failed to fetch apartments' });
     }
 });
 

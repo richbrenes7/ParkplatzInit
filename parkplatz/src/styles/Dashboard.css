@@ -1,0 +1,79 @@
+/* src/styles/Dashboard.css */
+
+/* Estilo general del contenedor del dashboard */
+.dashboard-container {
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* Estilo para el encabezado del dashboard */
+.dashboard-header {
+  background-color: #169F85;
+  padding: 15px;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Estilo para los cuadros de contenido */
+.dashboard-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Estilo para formularios de entrada */
+.dashboard-input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #020202;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Estilo para los botones */
+.dashboard-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #169F85;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.dashboard-button:hover {
+  background-color: #0d7f67;
+}
+
+/* Estilo para el contenedor de usuarios */
+.users-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.users-list li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.users-list li:last-child {
+  border-bottom: none;
+}
+
+.users-list button {
+  margin-left: 10px;
+}
+
+/* Estilo para el cuadro de búsqueda */
+.search-box {
+  margin-bottom: 20px;
+}
