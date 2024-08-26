@@ -11,26 +11,39 @@ function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError('');  // Resetea el error antes de intentar el login
         try {
             if (!username || !password) {
                 setError('Por favor, ingresa el nombre de usuario y la contraseña');
                 return;
             }
+
             const response = await axios.post('/api/login', { username, password });
-            const { token, role } = response.data;
-    
-            // Almacenar el token en localStorage
-            localStorage.setItem('token', token);
-    
-            // Redirigir según el rol
-            if (role === 'Administrador') {
-                navigate('/admin-dashboard');
-            } else if (role === 'Residente') {
-                navigate('/resident-dashboard');
-            } else if (role === 'Agente') {
-                navigate('/agent-dashboard');
+
+            if (response.data && response.data.token && response.data.role) {
+                const { token, role } = response.data;
+
+                // Almacena el nombre del residente y el token en localStorage
+                localStorage.setItem('nameResident', username);
+                localStorage.setItem('token', token);
+
+                // Redirigir según el rol
+                switch (role) {
+                    case 'Administrador':
+                        navigate('/admin-dashboard');
+                        break;
+                    case 'Residente':
+                        navigate('/resident-dashboard');
+                        break;
+                    case 'Agente':
+                        navigate('/agent-dashboard');
+                        break;
+                    default:
+                        navigate('/user-dashboard');
+                        break;
+                }
             } else {
-                navigate('/user-dashboard');
+                setError('Error inesperado: los datos de respuesta son inválidos.');
             }
         } catch (error) {
             console.error('Error during login:', error);

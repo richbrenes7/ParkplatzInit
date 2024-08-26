@@ -1,34 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/Dashboard.css'; 
+import { useNavigate } from 'react-router-dom';
+import '../styles/Dashboard.css';
 import axiosInstance from '../api/axiosInstance';
-import useAxios from '../hooks/useAxios';
 
-const ResidentDashboard = ({ numberDept="2" }) => {
-    // Asegúrate de que numberDept siempre tenga un valor
-    const [assignedDept, setAssignedDept] = useState("numberDept" || "");
+const ResidentDashboard = () => {
+    const [assignedDept, setAssignedDept] = useState('');
     const [newVisit, setNewVisit] = useState({ name: '', dpi: '', numCompanions: '', date: '', observaciones: '' });
-    const [visits, setVisits] = useState([]); 
+    const [visits, setVisits] = useState([]);
+    const [residentInfo, setResidentInfo] = useState(null);
+    const navigate = useNavigate();
 
-    // Hooks siempre en el mismo orden y sin condiciones
-    const { data: residentData, loading: residentLoading, error: residentError } = useAxios(`/apartments/${assignedDept}`, [assignedDept]);
-    const { data: visitsData, loading: visitsLoading, error: visitsError } = useAxios('/visitors', []);
+    // Obtener el nombre del residente desde localStorage
+    const nameResident = localStorage.getItem('nameResident');
 
     useEffect(() => {
-        if (residentData && residentData.residents) {
-            setAssignedDept(numberDept);
-        }
+        const fetchResidentData = async () => {
+            try {
+                const response = await axiosInstance.get('/api/residents/loggedin', {
+                    params: { nameResident }
+                });
 
-        if (Array.isArray(visitsData)) {
-            setVisits(visitsData);
-        } else {
-            setVisits([]); 
-        }
-    }, [residentData, visitsData, numberDept]);
+                if (response.data && response.data.residents && response.data.residents.length > 0) {
+                    setAssignedDept(response.data.numberDept);
+                    setResidentInfo(response.data.residents[0]);
 
-    // No continuar si no hay un número de departamento válido
-    if (!assignedDept) {
-        return <p>Error: No se ha asignado un número de departamento.</p>;
+                    console.log('Número de apartamento capturado:', response.data.numberDept);
+                    console.log('Nombre del residente capturado:', response.data.residents[0].nameResident);
+                } else {
+                    console.error('Error: No se obtuvo ningún dato de residente o la estructura es incorrecta.');
+                }
+            } catch (error) {
+                console.error('Error al obtener la información del residente logueado:', error);
+            }
+        };
+
+        fetchResidentData();
+    }, [nameResident]);
+
+    if (!nameResident) {
+        return <p>Error: No se ha identificado al residente.</p>;
     }
+
+    if (!residentInfo) return <p>Cargando...</p>;
 
     const handleAccept = async (visitId) => {
         try {
@@ -69,21 +82,31 @@ const ResidentDashboard = ({ numberDept="2" }) => {
         }
     };
 
-    if (residentLoading || visitsLoading) return <p>Cargando...</p>;
-    if (residentError || visitsError) return <p>Error al cargar los datos: {residentError?.message || visitsError?.message}</p>;
+    const handleLogout = () => {
+        localStorage.removeItem('nameResident');
+        navigate('/login'); 
+    };
 
-    const residentInfo = residentData?.residents?.[0] || null;
-    const pendingVisits = Array.isArray(visits) ? visits.filter(visit => visit.numberDept === numberDept && visit.status === 'Pendiente') : [];
+    const handleViewPhoto = (image) => {
+        if (window.view && typeof window.view.photoVisitModal === 'function') {
+            window.view.photoVisitModal(image);
+        } else {
+            console.error("El método 'photoVisitModal' no está definido en 'window.view'.");
+        }
+    };
 
     return (
         <div className="dashboard-container">
-            {residentInfo ? (
-                <h1 className="dashboard-header">
-                    Bienvenido {residentInfo.nameResident}, Apartamento {numberDept}
-                </h1>
-            ) : (
-                <h1 className="dashboard-header">Bienvenido, Apartamento No asignado</h1>
-            )}
+            <div className="welcome-panel">
+                {residentInfo ? (
+                    <h1 className="dashboard-header">
+                        Bienvenido {residentInfo.nameResident}, Apartamento {assignedDept}
+                    </h1>
+                ) : (
+                    <h1 className="dashboard-header">Bienvenido, Apartamento No asignado</h1>
+                )}
+                <button className="dashboard-button logout-button" onClick={handleLogout}>Logout</button>
+            </div>
             <div className="dashboard-content">
                 <h2 className="dashboard-header">Visitas Pendientes</h2>
                 <div className="contTable">
@@ -102,17 +125,17 @@ const ResidentDashboard = ({ numberDept="2" }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {pendingVisits.length > 0 ? (
-                                pendingVisits.map(visit => (
+                            {visits.length > 0 ? (
+                                visits.map(visit => (
                                     <tr key={visit._id}>
-                                        <td className="text-center">{numberDept}</td>
+                                        <td className="text-center">{assignedDept}</td>
                                         <td className="text-center">{visit.name}</td>
                                         <td className="text-center">{visit.dpi}</td>
                                         <td className="text-center">{visit.companions}</td>
                                         <td className="text-center">{new Date(visit.date).toLocaleDateString('es-CL')}</td>
                                         <td className="text-center">{new Date(visit.date).toLocaleTimeString('es-CL')}</td>
                                         <td className="text-center">
-                                            <button className="btn btn-warning text-white shadowStyle" data-toggle="modal" data-target="#exampleModalPhoto" onClick={() => window.view.photoVisitModal(visit.image)}>Ver</button>
+                                            <button className="btn btn-warning text-white shadowStyle" onClick={() => handleViewPhoto(visit.image)}>Ver</button>
                                         </td>
                                         <td className="text-center">{visit.status}</td>
                                         <td className="text-center">
