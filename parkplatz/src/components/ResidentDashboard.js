@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.css';
-import axiosInstance from '../api/axiosInstance';
+import axios from 'axios';
+
+// Configura la instancia de Axios
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8081/api', // Ruta base del backend
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
 
 const ResidentDashboard = () => {
     const [assignedDept, setAssignedDept] = useState('');
@@ -16,16 +24,11 @@ const ResidentDashboard = () => {
     useEffect(() => {
         const fetchResidentData = async () => {
             try {
-                const response = await axiosInstance.get('/api/residents/loggedin', {
-                    params: { nameResident }
-                });
-
+                const response = await axiosInstance.post('/residents/loggedin', { nameResident });
+        
                 if (response.data && response.data.residents && response.data.residents.length > 0) {
                     setAssignedDept(response.data.numberDept);
                     setResidentInfo(response.data.residents[0]);
-
-                    console.log('Número de apartamento capturado:', response.data.numberDept);
-                    console.log('Nombre del residente capturado:', response.data.residents[0].nameResident);
                 } else {
                     console.error('Error: No se obtuvo ningún dato de residente o la estructura es incorrecta.');
                 }
@@ -33,6 +36,7 @@ const ResidentDashboard = () => {
                 console.error('Error al obtener la información del residente logueado:', error);
             }
         };
+        
 
         fetchResidentData();
     }, [nameResident]);

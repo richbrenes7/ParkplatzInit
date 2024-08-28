@@ -264,32 +264,58 @@ app.get('/api/apartments', async (req, res) => {
 
 app.get('/api/residents/loggedin', async (req, res) => {
     try {
-        const residentName = req.query.nameResident;
+        const residentName = req.query.nameResident.trim(); // Asegúrate de hacer trim para eliminar espacios en blanco
+
         console.log('Nombre del residente recibido:', residentName);
 
         if (!residentName) {
             return res.status(400).json({ error: 'El nombre del residente es requerido' });
         }
 
-        // Realizar la búsqueda con insensibilidad a mayúsculas/minúsculas
         const resident = await Apartment.findOne(
             { "residents.nameResident": { $regex: new RegExp('^' + residentName.trim() + '$', 'i') } },
             { numberDept: 1, "residents": { $elemMatch: { nameResident: { $regex: new RegExp('^' + residentName.trim() + '$', 'i') } } } }
         );
-
-        // Imprimir el resultado de la consulta
-        console.log('Resultado de la búsqueda:', JSON.stringify(resident, null, 2));
+        
 
         if (!resident || !resident.residents || resident.residents.length === 0) {
             return res.status(404).json({ error: 'Residente no encontrado o estructura incorrecta' });
         }
 
-        console.log('Datos del residente encontrados:', resident);
         res.json(resident);
     } catch (error) {
         console.error('Error al obtener la información del residente logueado:', error.message);
         res.status(500).json({ error: 'Error al obtener la información del residente logueado' });
     }
+});
+
+app.get('/api/residents/all', async (req, res) => {
+    try {
+        const apartments = await Apartment.find();
+        res.json(apartments);
+    } catch (error) {
+        console.error('Error al obtener los residentes:', error.message);
+        res.status(500).json({ error: 'Error al obtener los residentes' });
+    }
+});
+app.post('/api/residents/loggedin', async (req, res) => {
+    const { nameResident } = req.body;
+    console.log('Nombre del residente recibido:', nameResident);
+
+    if (!nameResident) {
+        return res.status(400).json({ error: 'El nombre del residente es requerido' });
+    }
+
+    const resident = await Apartment.findOne(
+        { "residents.nameResident": { $regex: new RegExp('^' + nameResident.trim() + '$', 'i') } },
+        { numberDept: 1, "residents": { $elemMatch: { nameResident: { $regex: new RegExp('^' + nameResident.trim() + '$', 'i') } } } }
+    );
+
+    if (!resident || !resident.residents || resident.residents.length === 0) {
+        return res.status(404).json({ error: 'Residente no encontrado o estructura incorrecta' });
+    }
+
+    res.json(resident);
 });
 
 // Middleware para servir archivos estáticos del frontend
@@ -305,4 +331,3 @@ const PORT = 8081;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-cambios2124

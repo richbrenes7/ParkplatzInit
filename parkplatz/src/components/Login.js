@@ -18,13 +18,13 @@ function Login() {
                 return;
             }
 
-            const response = await axios.post('/api/login', { username, password });
+            const response = await axios.post('/api/login', { username: username.trim(), password });
 
             if (response.data && response.data.token && response.data.role) {
                 const { token, role } = response.data;
 
                 // Almacena el nombre del residente y el token en localStorage
-                localStorage.setItem('nameResident', username);
+                localStorage.setItem('nameResident', username.trim());
                 localStorage.setItem('token', token);
 
                 // Redirigir según el rol
@@ -46,7 +46,7 @@ function Login() {
                 setError('Error inesperado: los datos de respuesta son inválidos.');
             }
         } catch (error) {
-            console.error('Error during login:', error);
+            console.error('Error durante el login:', error);
             setError('Credenciales inválidas o error en el servidor');
         }
     };
