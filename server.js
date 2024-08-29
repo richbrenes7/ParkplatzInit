@@ -57,7 +57,7 @@ const visitorSchema = new mongoose.Schema({
     image: { type: String, required: false },
     status: { type: String, default: 'Pendiente' },
     date: { type: Date, default: Date.now },
-    observaciones: String
+    observaciones: String,
     registeredBy:{type: String, required:true}
 });
 
