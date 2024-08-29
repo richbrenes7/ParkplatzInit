@@ -1,6 +1,7 @@
 window.view = {};
 
 // Escritura de datos de visitante
+// Escritura de datos de visitante
 window.view.visitor = () => {
   let divVisitor = document.getElementById('container');
   divVisitor.innerHTML = `
@@ -24,11 +25,11 @@ window.view.visitor = () => {
           <!--Foto del visitante-->
           <div class="row justify-content-center">
               <video class="mt-2" id="player" width=320 height=240 autoplay></video>
-              <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240></canvas>
+              <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240 style="display: none;"></canvas>
           </div>
             <div class="row justify-content-center">
-              <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture">Sacar foto</button>
-              <button class="ml-1 btn btn-warning text-white shadowStyle" id="newCapture">Otra Foto</button>
+              <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture" onclick="window.view.captureImage()">Sacar foto</button>
+              <button class="ml-1 btn btn-warning text-white shadowStyle" id="upload" onclick="window.view.uploadImage()" style="display: none;">Subir Foto</button>
             </div>
           </div>
           <!--Datos del visitante-->
@@ -50,6 +51,43 @@ window.view.visitor = () => {
         </div> 
       </div>
     </div>`;
+};
+
+// Método para capturar la imagen
+window.view.captureImage = () => {
+    const player = document.getElementById('player');
+    const snapshotCanvas = document.getElementById('snapshot');
+    const context = snapshotCanvas.getContext('2d');
+
+    context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+
+    // Ocultar el video y mostrar la imagen capturada
+    player.style.display = 'none';
+    snapshotCanvas.style.display = 'block';
+    document.getElementById('upload').style.display = 'block';
+};
+
+// Método para subir la imagen a Google Cloud Storage
+window.view.uploadImage = () => {
+    const snapshotCanvas = document.getElementById('snapshot');
+    snapshotCanvas.toBlob((blob) => {
+        const formData = new FormData();
+        formData.append('file', blob, 'visitor-document.png');
+
+        fetch('http://localhost:8081/upload', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Image uploaded successfully:', data);
+            alert('Imagen subida con éxito');
+        })
+        .catch((error) => {
+            console.error('Error uploading image:', error);
+            alert('Error al subir la imagen');
+        });
+    });
 };
 
 // Escritura de datos de residentes 

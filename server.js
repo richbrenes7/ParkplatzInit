@@ -1,5 +1,7 @@
 require('dotenv').config({ path: './apipark.env' });
 
+const { Storage } = require('@google-cloud/storage');
+const multer = require('multer');
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -47,32 +49,29 @@ const apartmentSchema = new mongoose.Schema({
     residents: [residentSchema]
 });
 
-// Verificar si el modelo ya está definido para evitar el error OverwriteModelError
-const Apartment = mongoose.models.Apartment || mongoose.model('Apartment', apartmentSchema);
-const Visitor = mongoose.models.Visitor || mongoose.model('Visitor', {
-    numberDept: String,
-    name: String,
-    dpi: String,
-    companions: Number,
-    image: String,
+const visitorSchema = new mongoose.Schema({
+    numberDept: { type: String, required: true },
+    name: { type: String, required: true },
+    dpi: { type: String, required: true },
+    companions: { type: Number, required: true },
+    image: { type: String, required: false },
     status: { type: String, default: 'Pendiente' },
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now },
+    observaciones: String
+    registeredBy:{type: String, required:true}
 });
-const Visit = mongoose.models.Visit || mongoose.model('Visit', {
-    visitante: String,
-    residente: { type: mongoose.Schema.Types.ObjectId, ref: 'Resident' },
-    dpi: String,
-    numCompanions: Number,
-    fecha: Date,
-    registradoPorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    observaciones: String,
-    numberDept: String,
-});
+
+const Apartment = mongoose.models.Apartment || mongoose.model('Apartment', apartmentSchema);
+const Visitor = mongoose.models.Visitor || mongoose.model('Visitor', visitorSchema);
 
 // Rutas para la gestión de visitas
 app.get('/api/visitors/pending', async (req, res) => {
     try {
-        const visitors = await Visitor.find({ status: 'Pendiente' }).sort({ date: -1 });
+        const { numberDept } = req.query; // Asegúrate de recibir el número de departamento como query parameter
+        const visitors = await Visitor.find({ 
+            numberDept: numberDept, 
+            status: 'Pendiente' 
+        }).sort({ date: -1 });
         res.json(visitors);
     } catch (error) {
         console.error('Error al obtener visitas pendientes:', error.message);
@@ -80,52 +79,49 @@ app.get('/api/visitors/pending', async (req, res) => {
     }
 });
 
-app.post('/api/visits/:id/accept', async (req, res) => {
+app.post('/api/visitors/:id/accept', async (req, res) => {
     try {
-        const visit = await Visit.findByIdAndUpdate(req.params.id, { status: 'Aceptada' }, { new: true });
-        res.json(visit);
+        const visitor = await Visitor.findByIdAndUpdate(req.params.id, { status: 'Aceptada' }, { new: true });
+        res.json(visitor);
     } catch (error) {
         console.error('Error al aceptar la visita:', error.message);
         res.status(500).json({ error: 'Error al aceptar la visita' });
     }
 });
 
-app.post('/api/visits/:id/reject', async (req, res) => {
+app.post('/api/visitors/:id/reject', async (req, res) => {
     try {
-        const visit = await Visit.findByIdAndUpdate(req.params.id, { status: 'Rechazada' }, { new: true });
-        res.json({ message: 'Visita rechazada' });
+        const visitor = await Visitor.findByIdAndUpdate(req.params.id, { status: 'Rechazada' }, { new: true });
+        res.json(visitor);
     } catch (error) {
         console.error('Error al rechazar la visita:', error.message);
         res.status(500).json({ error: 'Error al rechazar la visita' });
     }
 });
 
-app.post('/api/visits/schedule', async (req, res) => {
+app.post('/api/visitors/schedule', async (req, res) => {
     try {
-        const { visitante, residenteId, numeroDept, dpi, numCompanions, fecha, registradoPorId, observaciones } = req.body;
+        const { name, numberDept, dpi, companions, date, observaciones } = req.body;
 
-        if (!mongoose.Types.ObjectId.isValid(residenteId) || !mongoose.Types.ObjectId.isValid(registradoPorId)) {
-            return res.status(400).json({ error: 'ID inválido' });
-        }
-
-        const newVisit = new Visit({
-            visitante,
-            residente: residenteId,
+        const newVisitor = new Visitor({
+            name,
+            numberDept,
             dpi,
-            numCompanions,
-            fecha,
-            registradoPorId,
+            companions,
+            date,
+            status: 'Pendiente',
             observaciones,
-            numberDept: numeroDept
+            registeredBy: 'Residente'  // Indicar que fue registrado por el residente
         });
 
-        const savedVisit = await newVisit.save();
-        res.status(201).json(savedVisit);
+        const savedVisitor = await newVisitor.save();
+        res.status(201).json(savedVisitor);
     } catch (error) {
         console.error('Error al agendar la visita:', error.message);
         res.status(500).json({ error: 'Error al agendar la visita' });
     }
 });
+
 
 // Rutas para la gestión de visitantes
 app.post('/api/visitors', async (req, res) => {
@@ -251,7 +247,6 @@ app.get('/api/residents/:numberDept', async (req, res) => {
     }
 });
 
-
 app.get('/api/apartments', async (req, res) => {
     try {
         const apartments = await Apartment.find();
@@ -276,7 +271,6 @@ app.get('/api/residents/loggedin', async (req, res) => {
             { "residents.nameResident": { $regex: new RegExp('^' + residentName.trim() + '$', 'i') } },
             { numberDept: 1, "residents": { $elemMatch: { nameResident: { $regex: new RegExp('^' + residentName.trim() + '$', 'i') } } } }
         );
-        
 
         if (!resident || !resident.residents || resident.residents.length === 0) {
             return res.status(404).json({ error: 'Residente no encontrado o estructura incorrecta' });
@@ -298,6 +292,7 @@ app.get('/api/residents/all', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los residentes' });
     }
 });
+
 app.post('/api/residents/loggedin', async (req, res) => {
     const { nameResident } = req.body;
     console.log('Nombre del residente recibido:', nameResident);
@@ -317,6 +312,41 @@ app.post('/api/residents/loggedin', async (req, res) => {
 
     res.json(resident);
 });
+
+// Configurar multer para manejar la subida de archivos
+const upload = multer({
+    storage: multer.memoryStorage(),
+  });
+  
+  const storage = new Storage({
+    keyFilename: 'path-to-your-service-account-key.json',
+  });
+  
+  const bucket = storage.bucket('your-bucket-name');
+  
+  // Ruta para manejar la subida de la imagen
+  app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+      const blob = bucket.file(req.file.originalname);
+      const blobStream = blob.createWriteStream({
+        resumable: false,
+      });
+  
+      blobStream.on('finish', () => {
+        res.status(200).send({
+          message: 'Upload complete',
+          fileName: req.file.originalname,
+        });
+      });
+  
+      blobStream.end(req.file.buffer);
+    } catch (error) {
+      res.status(500).send({
+        message: 'Upload failed',
+        error: error.message,
+      });
+    }
+  });
 
 // Middleware para servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, 'src')));

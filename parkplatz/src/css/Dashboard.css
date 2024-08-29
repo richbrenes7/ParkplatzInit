@@ -5,19 +5,51 @@
   background-color: #F5F5F5;
 }
 
-.dashboard-title {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 30px;
-  color: #169F85;
+.welcome-panel {
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos (mensaje y botón) a los extremos */
+  align-items: center;
+  background-color: #169F85;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
 }
 
-.dashboard-box {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 4px 6px 11px 0px rgba(0, 0, 0, 0.54);
+.dashboard-header {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.logout-button {
+  background-color: #ffffff;
+  color: #169F85;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #0d7f67;
+  color: white;
+}
+.dashboard-content {
+  margin-top: 20px;
+}
+
+.contTable {
+  margin-top: 20px;
+}
+
+.dashboard-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
   margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .dashboard-button {
@@ -33,19 +65,20 @@
   background-color: #0d7f67;
 }
 
-.dashboard-table {
+.tableStyle {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
 
-.dashboard-table th,
-.dashboard-table td {
+.tableStyle th,
+.tableStyle td {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-.dashboard-table th {
+.colorTable th {
   background-color: #169F85;
   color: white;
 }
+
