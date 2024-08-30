@@ -1,6 +1,6 @@
 window.view = {};
 
-// Escritura de datos de visitante
+
 // Escritura de datos de visitante
 window.view.visitor = () => {
   let divVisitor = document.getElementById('container');
@@ -27,30 +27,93 @@ window.view.visitor = () => {
               <video class="mt-2" id="player" width=320 height=240 autoplay></video>
               <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240 style="display: none;"></canvas>
           </div>
-            <div class="row justify-content-center">
-              <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture" onclick="window.view.captureImage()">Sacar foto</button>
-              <button class="ml-1 btn btn-warning text-white shadowStyle" id="upload" onclick="window.view.uploadImage()" style="display: none;">Subir Foto</button>
-            </div>
+          <div class="row justify-content-center">
+              <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture" onclick="window.view.captureAndValidate()">Sacar foto y Validar</button>
+              <button class="ml-1 btn btn-warning text-white shadowStyle" id="newCapture" style="display: none;" onclick="window.view.resetCapture()">Otra Foto</button>
           </div>
-          <!--Datos del visitante-->
-          <div class="container" id="visitorData">
+          <!--Datos del visitante que se mostrarán solo si no hay visitas programadas-->
+          <div class="container" id="visitorData" style="display: none;">
             <label for="nameVisitor" class="mt-2 colorTextLabel">Nombre del visitante</label>
             <input type="text" id="nameVisitor" placeholder="Nombre Visitante" required>
-
-            <label for="rutVisitor" class="colorTextLabel">DPI del visitante</label>
-            <input type="text" id="rutVisitor" placeholder="DPI" required>
 
             <label for="numCompanionsVisitor" class="colorTextLabel">Número de acompañantes</label>
             <input type="text" id="numCompanionsVisitor" placeholder="Número" required>
           </div>
           <div>
             <div class="row justify-content-center">
-              <button class="p-3 mt-2 btn btn-warning text-white shadowStyle" id="btnDataVisitor" onclick="window.controller.dataInformationVisitor()">Agregar</button>
+              <button class="p-3 mt-2 btn btn-warning text-white shadowStyle" id="btnDataVisitor" style="display: none;" onclick="window.controller.dataInformationVisitor()">Agregar</button>
             </div>
           </div>
         </div> 
       </div>
     </div>`;
+
+  // Llamar a performCapture después de que la vista ha sido renderizada
+  window.controller.performCapture();
+};
+
+// Método para capturar la imagen y validar el DPI
+window.view.captureAndValidate = () => {
+    const player = document.getElementById('player');
+    const snapshotCanvas = document.getElementById('snapshot');
+    const context = snapshotCanvas.getContext('2d');
+
+    context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+
+    // Ocultar el video y mostrar la imagen capturada
+    player.style.display = 'none';
+    snapshotCanvas.style.display = 'block';
+    document.getElementById('newCapture').style.display = 'block';
+
+    // Convertir la imagen en Blob y subirla para validación
+    snapshotCanvas.toBlob((blob) => {
+        const formData = new FormData();
+        formData.append('file', blob, 'visitor-document.png');
+
+        fetch('http://localhost:8081/upload', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Image uploaded successfully:', data);
+
+            // Validar el DPI después de subir la imagen
+            return fetch(`http://localhost:8081/api/validateDPI?dpi=${data.dpi}`, {
+                method: 'GET'
+            });
+        })
+        .then(response => response.json())
+        .then(validationData => {
+            if (validationData.status === 'found') {
+                console.log('Visita encontrada:', validationData.visitor);
+                alert('Visita pendiente encontrada. Se cambiará el estado a Aceptada.');
+                // Actualiza el estado de la visita a "Aceptada" automáticamente
+            } else {
+                console.log('No se encontró ninguna visita pendiente');
+                alert('No se encontró ninguna visita pendiente. Complete los datos del visitante.');
+                // Mostrar los campos para el registro manual del visitante
+                document.getElementById('visitorData').style.display = 'block';
+                document.getElementById('btnDataVisitor').style.display = 'block';
+            }
+        })
+        .catch((error) => {
+            console.error('Error during image upload or DPI validation:', error);
+            alert('Error al subir la imagen o al validar el DPI.');
+        });
+    });
+};
+
+// Método para reiniciar la captura
+window.view.resetCapture = () => {
+    const player = document.getElementById('player');
+    const snapshotCanvas = document.getElementById('snapshot');
+
+    player.style.display = 'block';
+    snapshotCanvas.style.display = 'none';
+    document.getElementById('newCapture').style.display = 'none';
+    document.getElementById('visitorData').style.display = 'none';
+    document.getElementById('btnDataVisitor').style.display = 'none';
 };
 
 // Método para capturar la imagen
@@ -67,28 +130,46 @@ window.view.captureImage = () => {
     document.getElementById('upload').style.display = 'block';
 };
 
-// Método para subir la imagen a Google Cloud Storage
+// Método para subir la imagen a Google Cloud Storage y validar el DPI
 window.view.uploadImage = () => {
-    const snapshotCanvas = document.getElementById('snapshot');
-    snapshotCanvas.toBlob((blob) => {
-        const formData = new FormData();
-        formData.append('file', blob, 'visitor-document.png');
+  const snapshotCanvas = document.getElementById('snapshot');
+  snapshotCanvas.toBlob((blob) => {
+      const formData = new FormData();
+      formData.append('file', blob, 'visitor-document.png');
 
-        fetch('http://localhost:8081/upload', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Image uploaded successfully:', data);
-            alert('Imagen subida con éxito');
-        })
-        .catch((error) => {
-            console.error('Error uploading image:', error);
-            alert('Error al subir la imagen');
-        });
-    });
+      fetch('http://localhost:8081/upload', {
+          method: 'POST',
+          body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Image uploaded successfully:', data);
+          alert('Imagen subida con éxito');
+
+          // Validar el DPI después de subir la imagen
+          return fetch(`http://localhost:8081/api/validateDPI?dpi=${data.dpi}`, {
+              method: 'GET'
+          });
+      })
+      .then(response => response.json())
+      .then(validationData => {
+          if (validationData.status === 'found') {
+              console.log('Visita encontrada:', validationData.visitor);
+              alert('Visita pendiente encontrada. Se cambiará el estado a Aceptada.');
+              // Aquí puedes hacer algo adicional si la visita fue encontrada
+          } else {
+              console.log('No se encontró ninguna visita pendiente');
+              alert('No se encontró ninguna visita pendiente.');
+              // Aquí puedes habilitar los campos para el registro manual
+          }
+      })
+      .catch((error) => {
+          console.error('Error during image upload or DPI validation:', error);
+          alert('Error al subir la imagen o al validar el DPI.');
+      });
+  });
 };
+
 
 // Escritura de datos de residentes 
 window.view.resident = () => {
