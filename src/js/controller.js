@@ -3,7 +3,10 @@ window.controller = {};
 window.onload = () => {
   console.log("Cargando la vista de visitantes...");
   window.view.visitor();
-  window.controller.performCapture();
+  // Mueve performCapture para que se ejecute después de cargar la vista del visitante
+  setTimeout(() => {
+    window.controller.performCapture();
+  }, 0);
 };
 
 // Lee datos (inputs) de visitantes
@@ -16,13 +19,15 @@ window.controller.dataInformationVisitor = () => {
   let snapshotCanvas = document.getElementById('snapshot');
   let dataURL = snapshotCanvas.toDataURL(); // Captura la imagen como base64
 
+  // Añadir `registeredBy`, puedes cambiar el valor "Visitor" si es necesario
   const dataVisitor = {
     date: new Date(),
     numberDept: toWhoVisitor,
     name: nameVisitor,
     dpi: dpiVisitor,
     companions: numCompanionsVisitor,
-    image: dataURL
+    image: dataURL,
+    registeredBy: "Visitor"  // Cambiar según corresponda
   };
 
   console.log("Datos del visitante a enviar:", dataVisitor);
@@ -36,6 +41,7 @@ window.controller.dataInformationVisitor = () => {
 
   window.data.readCollectionVisitors();
 };
+
 
 // Lee datos (inputs) de residentes
 window.controller.dataInformationResident = () => {
@@ -106,11 +112,19 @@ window.controller.tableCollectionVisitors = () => {
 };
 
 // Realizar captura de foto
+// Realizar captura de foto
 window.controller.performCapture = () => {
   let player = document.getElementById('player');
   let snapshotCanvas = document.getElementById('snapshot');
   let captureButton = document.getElementById('capture');
   let newCapture = document.getElementById('newCapture');
+
+  // Verificar que los elementos existen antes de agregar los listeners
+  if (!player || !snapshotCanvas || !captureButton || !newCapture) {
+    console.error("Error: No se encontraron elementos de captura en el DOM.");
+    return;
+  }
+
   let videoTracks;
 
   let handleSuccess = (stream) => {

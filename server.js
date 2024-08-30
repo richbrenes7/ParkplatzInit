@@ -1,9 +1,13 @@
 require('dotenv').config({ path: './apipark.env' });
 
+const path = require('path'); // Asegúrate de importar 'path' al inicio
 const { Storage } = require('@google-cloud/storage');
+const storage = new Storage({
+    keyFilename: path.join(__dirname, 'parkplatz-4376a-ed606605abb9.json') // Corrige el nombre del archivo según sea necesario
+});
+const bucketName = 'parkplatz-transform';
 const multer = require('multer');
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -58,7 +62,7 @@ const visitorSchema = new mongoose.Schema({
     status: { type: String, default: 'Pendiente' },
     date: { type: Date, default: Date.now },
     observaciones: String,
-    registeredBy:{type: String, required:true}
+    registeredBy: { type: String, required: true }
 });
 
 const Apartment = mongoose.models.Apartment || mongoose.model('Apartment', apartmentSchema);
@@ -68,9 +72,9 @@ const Visitor = mongoose.models.Visitor || mongoose.model('Visitor', visitorSche
 app.get('/api/visitors/pending', async (req, res) => {
     try {
         const { numberDept } = req.query; // Asegúrate de recibir el número de departamento como query parameter
-        const visitors = await Visitor.find({ 
-            numberDept: numberDept, 
-            status: 'Pendiente' 
+        const visitors = await Visitor.find({
+            numberDept: numberDept,
+            status: 'Pendiente'
         }).sort({ date: -1 });
         res.json(visitors);
     } catch (error) {
@@ -122,11 +126,29 @@ app.post('/api/visitors/schedule', async (req, res) => {
     }
 });
 
-
 // Rutas para la gestión de visitantes
 app.post('/api/visitors', async (req, res) => {
     try {
-        const newVisitor = new Visitor(req.body);
+        const { numberDept, name, dpi, companions, image, registeredBy } = req.body;
+
+        // Subir la imagen al bucket de Google Cloud
+        const fileName = `${Date.now()}_${dpi}.png`;  // Nombre del archivo en el bucket
+        const buffer = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        const file = storage.bucket(bucketName).file(fileName);
+
+        await file.save(buffer, {
+            metadata: { contentType: 'image/png' },
+        });
+
+        const newVisitor = new Visitor({
+            numberDept,
+            name,
+            dpi,
+            companions,
+            image: `https://storage.googleapis.com/${bucketName}/${fileName}`,  // URL de la imagen
+            registeredBy
+        });
+
         const savedVisitor = await newVisitor.save();
         res.json({ id: savedVisitor._id });
     } catch (error) {
@@ -134,6 +156,7 @@ app.post('/api/visitors', async (req, res) => {
         res.status(500).send('Error al agregar visitante');
     }
 });
+
 
 app.get('/api/visitors', async (req, res) => {
     try {
@@ -316,37 +339,64 @@ app.post('/api/residents/loggedin', async (req, res) => {
 // Configurar multer para manejar la subida de archivos
 const upload = multer({
     storage: multer.memoryStorage(),
-  });
-  
-  const storage = new Storage({
-    keyFilename: 'path-to-your-service-account-key.json',
-  });
-  
-  const bucket = storage.bucket('your-bucket-name');
-  
-  // Ruta para manejar la subida de la imagen
-  app.post('/upload', upload.single('file'), async (req, res) => {
+});
+
+const bucket = storage.bucket(bucketName);
+
+// Ruta para manejar la subida de la imagen
+app.post('/upload', upload.single('file'), async (req, res) => {
     try {
-      const blob = bucket.file(req.file.originalname);
-      const blobStream = blob.createWriteStream({
-        resumable: false,
-      });
-  
-      blobStream.on('finish', () => {
-        res.status(200).send({
-          message: 'Upload complete',
-          fileName: req.file.originalname,
+        const blob = bucket.file(req.file.originalname);
+        const blobStream = blob.createWriteStream({
+            resumable: false,
         });
-      });
-  
-      blobStream.end(req.file.buffer);
+
+        blobStream.on('finish', () => {
+            res.status(200).send({
+                message: 'Upload complete',
+                fileName: req.file.originalname,
+            });
+        });
+
+        blobStream.end(req.file.buffer);
     } catch (error) {
-      res.status(500).send({
-        message: 'Upload failed',
-        error: error.message,
-      });
+        res.status(500).send({
+            message: 'Upload failed',
+            error: error.message,
+        });
     }
-  });
+});
+
+// Ruta para validar si existe una visita pendiente para el DPI
+app.get('/api/validateDPI', async (req, res) => {
+    const { dpi } = req.query;
+    const normalizedDPI = normalizeDpi(dpi);
+    const visitor = await Visitor.findOne({ dpi: normalizedDPI, status: 'Pendiente' });
+
+    if (visitor) {
+        res.json({ status: 'found', visitor });
+    } else {
+        res.json({ status: 'not_found' });
+    }
+});
+
+// Ruta para aceptar una visita si existe
+app.post('/api/acceptVisit', async (req, res) => {
+    const { dpi } = req.query;
+    const normalizedDPI = normalizeDpi(dpi);
+
+    const visitor = await Visitor.findOneAndUpdate(
+        { dpi: normalizedDPI, status: 'Pendiente' },
+        { $set: { status: 'Aceptada' } },
+        { new: true }
+    );
+
+    if (visitor) {
+        res.json({ status: 'success', visitor });
+    } else {
+        res.json({ status: 'error', message: 'No se encontró ninguna visita pendiente para aceptar.' });
+    }
+});
 
 // Middleware para servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, 'src')));

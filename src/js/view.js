@@ -25,11 +25,11 @@ window.view.visitor = () => {
           <!--Foto del visitante-->
           <div class="row justify-content-center">
               <video class="mt-2" id="player" width=320 height=240 autoplay></video>
-              <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240 style="display: none;"></canvas>
+              <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240></canvas>
           </div>
             <div class="row justify-content-center">
-              <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture" onclick="window.view.captureImage()">Sacar foto</button>
-              <button class="ml-1 btn btn-warning text-white shadowStyle" id="upload" onclick="window.view.uploadImage()" style="display: none;">Subir Foto</button>
+              <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture">Sacar foto</button>
+              <button class="ml-1 btn btn-warning text-white shadowStyle" id="newCapture">Otra Foto</button>
             </div>
           </div>
           <!--Datos del visitante-->
@@ -51,7 +51,11 @@ window.view.visitor = () => {
         </div> 
       </div>
     </div>`;
+
+  // Llamar a performCapture después de que la vista ha sido renderizada
+  window.controller.performCapture();
 };
+
 
 // Método para capturar la imagen
 window.view.captureImage = () => {
