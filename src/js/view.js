@@ -1,6 +1,5 @@
 window.view = {};
 
-
 // Escritura de datos de visitante
 window.view.visitor = () => {
   let divVisitor = document.getElementById('container');
@@ -52,20 +51,18 @@ window.view.visitor = () => {
   window.controller.performCapture();
 };
 
-// Método para capturar la imagen y validar el DPI
 window.view.captureAndValidate = () => {
     const player = document.getElementById('player');
     const snapshotCanvas = document.getElementById('snapshot');
     const context = snapshotCanvas.getContext('2d');
 
+    // Captura la imagen del video
     context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
-    // Ocultar el video y mostrar la imagen capturada
     player.style.display = 'none';
     snapshotCanvas.style.display = 'block';
     document.getElementById('newCapture').style.display = 'block';
 
-    // Convertir la imagen en Blob y subirla para validación
     snapshotCanvas.toBlob((blob) => {
         const formData = new FormData();
         formData.append('file', blob, 'visitor-document.png');
@@ -76,33 +73,43 @@ window.view.captureAndValidate = () => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Image uploaded successfully:', data);
-
-            // Validar el DPI después de subir la imagen
+            console.log('Datos recibidos tras subir la imagen:', data);
             return fetch(`http://localhost:8081/api/validateDPI?dpi=${data.dpi}`, {
                 method: 'GET'
             });
         })
         .then(response => response.json())
         .then(validationData => {
-            if (validationData.status === 'found') {
-                console.log('Visita encontrada:', validationData.visitor);
-                alert('Visita pendiente encontrada. Se cambiará el estado a Aceptada.');
-                // Actualiza el estado de la visita a "Aceptada" automáticamente
-            } else {
-                console.log('No se encontró ninguna visita pendiente');
-                alert('No se encontró ninguna visita pendiente. Complete los datos del visitante.');
-                // Mostrar los campos para el registro manual del visitante
-                document.getElementById('visitorData').style.display = 'block';
-                document.getElementById('btnDataVisitor').style.display = 'block';
-            }
-        })
+          console.log('Datos de validación recibidos:', validationData);
+          if (validationData.status === 'found' || validationData.status === 'accepted') {
+              console.log('Visita aceptada:', validationData.visitor);
+              alert(`Visita aceptada exitosamente para ${validationData.visitor.name}. Estado de la visita: ${validationData.visitor.status}.`);
+      
+              // Limpiar campos y reiniciar la captura
+              document.getElementById('toWhoVisitor').value = '';
+              document.getElementById('visitorData').style.display = 'none';
+              document.getElementById('btnDataVisitor').style.display = 'none';
+      
+              // Reiniciar la captura
+              window.view.resetCapture();
+              window.controller.performCapture();
+          } else {
+              console.log('No se encontró ninguna visita pendiente');
+              alert('No se encontró ninguna visita pendiente. Complete los datos del visitante.');
+              document.getElementById('visitorData').style.display = 'block';
+              document.getElementById('btnDataVisitor').style.display = 'block';
+          }
+         })
+      
         .catch((error) => {
-            console.error('Error during image upload or DPI validation:', error);
+            console.error('Error durante la subida de la imagen o la validación del DPI:', error);
             alert('Error al subir la imagen o al validar el DPI.');
         });
     });
 };
+
+
+
 
 // Método para reiniciar la captura
 window.view.resetCapture = () => {
@@ -115,6 +122,8 @@ window.view.resetCapture = () => {
     document.getElementById('visitorData').style.display = 'none';
     document.getElementById('btnDataVisitor').style.display = 'none';
 };
+
+
 
 // Método para capturar la imagen
 window.view.captureImage = () => {
