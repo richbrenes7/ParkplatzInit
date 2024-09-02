@@ -52,78 +52,79 @@ window.view.visitor = () => {
 };
 
 window.view.captureAndValidate = () => {
-    const player = document.getElementById('player');
-    const snapshotCanvas = document.getElementById('snapshot');
-    const context = snapshotCanvas.getContext('2d');
+  const player = document.getElementById('player');
+  const snapshotCanvas = document.getElementById('snapshot');
+  const context = snapshotCanvas.getContext('2d');
 
-    // Captura la imagen del video
-    context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+  context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
-    player.style.display = 'none';
-    snapshotCanvas.style.display = 'block';
-    document.getElementById('newCapture').style.display = 'block';
+  player.style.display = 'none';
+  snapshotCanvas.style.display = 'block';
+  document.getElementById('newCapture').style.display = 'block';
 
-    snapshotCanvas.toBlob((blob) => {
-        const formData = new FormData();
-        formData.append('file', blob, 'visitor-document.png');
+  snapshotCanvas.toBlob((blob) => {
+      const formData = new FormData();
+      formData.append('file', blob, 'visitor-document.png');
 
-        fetch('http://localhost:8081/upload', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Datos recibidos tras subir la imagen:', data);
-            return fetch(`http://localhost:8081/api/validateDPI?dpi=${data.dpi}`, {
-                method: 'GET'
-            });
-        })
-        .then(response => response.json())
-        .then(validationData => {
+      fetch('http://localhost:8081/upload', {
+          method: 'POST',
+          body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Datos recibidos tras subir la imagen:', data);
+          return fetch(`http://localhost:8081/api/validateDPI?dpi=${data.dpi}`, {
+              method: 'GET'
+          });
+      })
+      .then(response => response.json())
+      .then(validationData => {
           console.log('Datos de validación recibidos:', validationData);
-          if (validationData.status === 'found' || validationData.status === 'accepted') {
-              console.log('Visita aceptada:', validationData.visitor);
-              alert(`Visita aceptada exitosamente para ${validationData.visitor.name}. Estado de la visita: ${validationData.visitor.status}.`);
-      
-              // Limpiar campos y reiniciar la captura
-              document.getElementById('toWhoVisitor').value = '';
-              document.getElementById('visitorData').style.display = 'none';
-              document.getElementById('btnDataVisitor').style.display = 'none';
-      
-              // Reiniciar la captura
+          if (validationData.status === 'accepted') {
+              const visitorName = validationData.visitor_name;
+              alert(`Visita aceptada exitosamente para: ${visitorName}. Bienvenido!`);
+              
+              // Limpiar los campos de entrada
+              window.view.clearVisitorFields();
+
+              // Restablecer el estado de la captura
               window.view.resetCapture();
               window.controller.performCapture();
-          } else {
+          } else if (validationData.status === 'not_found') {
               console.log('No se encontró ninguna visita pendiente');
               alert('No se encontró ninguna visita pendiente. Complete los datos del visitante.');
               document.getElementById('visitorData').style.display = 'block';
               document.getElementById('btnDataVisitor').style.display = 'block';
+          } else {
+              console.error('Unexpected status received:', validationData.status);
+              alert('Ocurrió un error inesperado.');
           }
-         })
-      
-        .catch((error) => {
-            console.error('Error durante la subida de la imagen o la validación del DPI:', error);
-            alert('Error al subir la imagen o al validar el DPI.');
-        });
-    });
+      })
+      .catch((error) => {
+          console.error('Error durante la subida de la imagen o la validación del DPI:', error);
+          alert('Error al subir la imagen o al validar el DPI.');
+      });
+  });
 };
-
-
-
 
 // Método para reiniciar la captura
 window.view.resetCapture = () => {
-    const player = document.getElementById('player');
-    const snapshotCanvas = document.getElementById('snapshot');
+  const player = document.getElementById('player');
+  const snapshotCanvas = document.getElementById('snapshot');
 
-    player.style.display = 'block';
-    snapshotCanvas.style.display = 'none';
-    document.getElementById('newCapture').style.display = 'none';
-    document.getElementById('visitorData').style.display = 'none';
-    document.getElementById('btnDataVisitor').style.display = 'none';
+  player.style.display = 'block';
+  snapshotCanvas.style.display = 'none';
+  document.getElementById('newCapture').style.display = 'none';
+  document.getElementById('visitorData').style.display = 'none';
+  document.getElementById('btnDataVisitor').style.display = 'none';
 };
 
-
+// Método para limpiar campos del formulario de visitante
+window.view.clearVisitorFields = () => {
+  document.getElementById('toWhoVisitor').value = '';
+  document.getElementById('nameVisitor').value = '';
+  document.getElementById('numCompanionsVisitor').value = '';
+};
 
 // Método para capturar la imagen
 window.view.captureImage = () => {
@@ -173,8 +174,8 @@ window.view.uploadImage = () => {
           }
       })
       .catch((error) => {
-          console.error('Error during image upload or DPI validation:', error);
-          alert('Error al subir la imagen o al validar el DPI.');
+          console.error('Error durante la validación del DPI:', error);
+          alert('Error al validar el DPI.');
       });
   });
 };
@@ -274,6 +275,7 @@ window.view.photoVisitModal = (image) => {
 };
 
 // Agrega los residentes de un departamento
+// Método para agregar residentes de un departamento
 window.view.insertResident = (dataRes) => {
   let divInsertResident = document.getElementById('insertResident');
   divInsertResident.innerHTML = `

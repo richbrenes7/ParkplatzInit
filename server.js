@@ -382,7 +382,10 @@ app.get('/api/validateDPI', async (req, res) => {
     const visitor = await Visitor.findOne({ dpi: normalizedDPI, status: 'Pendiente' });
 
     if (visitor) {
-        res.json({ status: 'found', visitor });
+        // Actualizar el estado de la visita a "Aceptada"
+        visitor.status = 'Aceptada';
+        await visitor.save();
+        res.json({ status: 'accepted', visitor_name: visitor.name });
     } else {
         res.json({ status: 'not_found' });
     }
