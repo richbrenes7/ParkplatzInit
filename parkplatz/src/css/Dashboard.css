@@ -35,6 +35,7 @@
   background-color: #0d7f67;
   color: white;
 }
+
 .dashboard-content {
   margin-top: 20px;
 }
@@ -50,6 +51,7 @@
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
 }
 
 .dashboard-button {
@@ -59,10 +61,12 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .dashboard-button:hover {
   background-color: #0d7f67;
+  transform: translateY(-2px);
 }
 
 .tableStyle {
@@ -81,4 +85,3 @@
   background-color: #169F85;
   color: white;
 }
-

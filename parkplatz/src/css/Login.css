@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #AACA97; /* Fondo de tu página */
-  background-image: url('ruta_a_tu_imagen_de_fondo.jpg'); /* Puedes agregar una imagen de fondo si lo deseas */
+  background-color: #AACA97;
+  background-image: url('D:\Documents\Nueva carpeta\ParkplatzInit\parkplatz\public\img\fondo2.jpg');
   background-size: cover;
   background-position: center;
 }
@@ -14,36 +14,41 @@
 .login-box {
   width: 400px;
   padding: 40px;
-  background: rgba(255, 255, 255, 0.1); /* Fondo semitransparente para el contenedor */
-  box-shadow: 4px 6px 11px 0px rgba(0, 0, 0, 0.54); /* Mantener sombra */
-  border-radius: 10px; /* Bordes redondeados */
-  backdrop-filter: blur(10px); /* Efecto de desenfoque de fondo */
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 4px 6px 11px 0px rgba(0, 0, 0, 0.54);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .login-title {
   text-align: center;
   margin-bottom: 30px;
   font-size: 28px;
-  color: #169F85; /* Color de texto */
+  color: #169F85;
   font-weight: bold;
 }
 
 .login-input {
   width: 100%;
   padding: 14px 20px;
-  margin: 10px 0;
+  margin: 10px 5px; /* Cambiado a auto para centrar los elementos horizontalmente */
   border: 1px solid #020202;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
   color: #020202;
+  font-family: 'Arial', sans-serif; /* Tipografía consistente */
 }
 
+
 .login-input::placeholder {
-  color: #555; /* Color del texto del placeholder */
+  color: #555;
 }
 
 .login-button {
-  width: 100%;
+  width: 80%;
   padding: 14px;
   margin-top: 20px;
   background-color: #169F85;
@@ -76,9 +81,8 @@
   text-decoration: underline;
 }
 
-/* Estilos adicionales para botones */
 .change-method-button {
-  width: 100%;
+  width: 80%;
   padding: 12px;
   margin-top: 10px;
   background-color: transparent;

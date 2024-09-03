@@ -30,7 +30,7 @@ function App() {
                 />
                 <Route
                     path="/agent-dashboard"
-                    element={<ProtectedRoute component={AgentDashboard} requiredRole="Agente" />}
+                    element={<ProtectedRoute component={AgentDashboard} requiredRole="Guardia" />}
                 />
                 <Route
                     path="/user-dashboard"

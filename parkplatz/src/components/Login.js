@@ -37,7 +37,7 @@ function Login() {
                         localStorage.setItem('nameResident', username.trim());
                         navigate('/resident-dashboard');
                         break;
-                    case 'Agente':
+                    case 'Guardia':
                         localStorage.setItem('nameAgent', username.trim());
                         console.log('nameAgent almacenado en localStorage:', localStorage.getItem('nameAgent'));
                         navigate('/agent-dashboard');
@@ -59,7 +59,8 @@ function Login() {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2 className="login-title">Login</h2>
+                <h2 className="login-title">Inicia sesión</h2>
+                
                 <form onSubmit={handleLogin}>
                     <input
                         type="text"
