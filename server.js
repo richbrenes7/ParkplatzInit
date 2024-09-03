@@ -11,6 +11,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { GoogleAuth } = require('google-auth-library');
+const axios = require('axios');
+process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, 'parkplatz-4376a-ed606605abb9.json');
 
 const authRoutes = require('./routes/authRoutes');
 
@@ -137,7 +140,8 @@ app.post('/api/visitors', async (req, res) => {
         const { numberDept, name, dpi, companions, image, registeredBy } = req.body;
 
         // Subir la imagen al bucket de Google Cloud
-        const fileName = `${Date.now()}_${normalizeDpi(dpi)}.png`;  // Nombre del archivo en el bucket
+        // Cambia esta línea para generar un nombre de archivo más corto
+        const fileName = `visitor_${Date.now()}.png`; // Nombre del archivo reducido
         const buffer = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         const file = storage.bucket(bucketName).file(fileName);
 
@@ -346,21 +350,24 @@ const upload = multer({
     storage: multer.memoryStorage(),
 });
 
-const bucket = storage.bucket(bucketName);
-
 // Ruta para manejar la subida de la imagen
 app.post('/upload', upload.single('file'), async (req, res) => {
     try {
-        const blob = bucket.file(req.file.originalname);
+        const fileName = `visitor_${Date.now()}.png`; // Nombre del archivo reducido
+        const blob = bucket.file(fileName);
         const blobStream = blob.createWriteStream({
             resumable: false,
         });
 
-        blobStream.on('finish', () => {
-            res.status(200).send({
-                message: 'Upload complete',
-                fileName: req.file.originalname,
-            });
+        blobStream.on('finish', async () => {
+            // Llamar a la función de Google Cloud
+            const result = await callGoogleFunction(fileName);  // Aquí envías el nombre del archivo
+
+            if (result.status === 'success') {
+                res.status(200).json(result);
+            } else {
+                res.status(400).json({ message: 'Failed to process image', error: result.message });
+            }
         });
 
         blobStream.end(req.file.buffer);
@@ -372,22 +379,82 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     }
 });
 
+const bucket = storage.bucket(bucketName);
+
+async function callGoogleFunction(fileName) {
+    try {
+        const token = await getAccessToken();
+        console.log('Access Token:', token); // Depuración: Verificar si el token se obtiene correctamente
+        
+        const response = await axios.post(
+            'https://us-central1-parkplatz-4376a.cloudfunctions.net/function-1',
+            { name: fileName, bucket: bucketName }, // Enviar también el nombre del bucket y el archivo correctamente
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Agrega el token de acceso
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error calling Google Function:', error.response ? error.response.data : error.message);
+        return { status: 'error', message: 'Failed to call Google Function' };
+    }
+}
+
+async function getAccessToken() {
+    const auth = new GoogleAuth({
+        scopes: 'https://www.googleapis.com/auth/cloud-platform',
+    });
+    const client = await auth.getClient();
+    const token = await client.getAccessToken();
+    return token.token;
+}
+
 // Ruta para validar si existe una visita pendiente para el DPI
 app.get('/api/validateDPI', async (req, res) => {
+    try {
+        const { dpi } = req.query;
+        
+        // Normaliza el DPI eliminando espacios o caracteres innecesarios
+        const normalizedDPI = normalizeDpi(dpi); 
+
+        const visitor = await Visitor.findOne({ dpi: normalizedDPI, status: 'Pendiente' });
+
+        if (visitor) {
+            // Actualizar el estado de la visita a "Aceptada"
+            visitor.status = 'Aceptada';
+            await visitor.save();
+            res.json({ status: 'accepted', visitor_name: visitor.name });
+        } else {
+            res.json({ status: 'not_found' });
+        }
+    } catch (error) {
+        console.error('Error during DPI validation:', error.message);
+        res.status(500).json({ status: 'error', message: 'Internal server error.' });
+    }
+});
+
+app.get('/api/validateVisit', async (req, res) => {
     const { dpi } = req.query;
-    
-    // Normaliza el DPI eliminando espacios o caracteres innecesarios
-    const normalizedDPI = normalizeDpi(dpi); 
 
-    const visitor = await Visitor.findOne({ dpi: normalizedDPI, status: 'Pendiente' });
+    if (!dpi) {
+        return res.status(400).json({ status: 'error', message: 'DPI is required' });
+    }
 
-    if (visitor) {
-        // Actualizar el estado de la visita a "Aceptada"
-        visitor.status = 'Aceptada';
-        await visitor.save();
-        res.json({ status: 'accepted', visitor_name: visitor.name });
-    } else {
-        res.json({ status: 'not_found' });
+    try {
+        const normalizedDPI = normalizeDpi(dpi);
+        const visitor = await Visitor.findOne({ dpi: normalizedDPI });
+
+        if (visitor) {
+            res.json({ status: visitor.status, visitor_name: visitor.name });
+        } else {
+            res.json({ status: 'not_found' });
+        }
+    } catch (error) {
+        console.error('Error al validar el estado de la visita:', error.message);
+        res.status(500).json({ status: 'error', message: 'Error al validar el estado de la visita' });
     }
 });
 
@@ -410,6 +477,59 @@ app.post('/api/acceptVisit', async (req, res) => {
         res.json({ status: 'error', message: 'No se encontró ninguna visita pendiente para aceptar.' });
     }
 });
+
+app.get('/api/agent/loggedin', async (req, res) => {
+    try {
+        const agentName = req.query.nameAgent.trim(); // Asegúrate de hacer trim para eliminar espacios en blanco
+
+        console.log('Nombre del agente recibido:', agentName);
+
+        if (!agentName) {
+            return res.status(400).json({ error: 'El nombre del agente es requerido' });
+        }
+
+        const agent = await Agent.findOne(
+            { "agentName": { $regex: new RegExp('^' + agentName.trim() + '$', 'i') } },
+            { agentName: 1, numberDept: 1 } // Ajusta los campos que quieres devolver
+        );
+
+        if (!agent) {
+            return res.status(404).json({ error: 'Agente no encontrado' });
+        }
+
+        res.json(agent);
+    } catch (error) {
+        console.error('Error al obtener la información del agente logueado:', error.message);
+        res.status(500).json({ error: 'Error al obtener la información del agente logueado' });
+    }
+});
+
+app.post('/api/agent/loggedin', async (req, res) => {
+    const { nameAgent } = req.body;
+    console.log('Nombre del agente recibido:', nameAgent);
+
+    if (!nameAgent) {
+        return res.status(400).json({ error: 'El nombre del agente es requerido' });
+    }
+
+    try {
+        const agent = await Agent.findOne(
+            { "agentName": { $regex: new RegExp('^' + nameAgent.trim() + '$', 'i') } },
+            { agentName: 1, numberDept: 1 } // Ajusta los campos que quieres devolver
+        );
+
+        if (!agent) {
+            return res.status(404).json({ error: 'Agente no encontrado' });
+        }
+
+        res.json(agent);
+    } catch (error) {
+        console.error('Error al obtener la información del agente logueado:', error.message);
+        res.status(500).json({ error: 'Error al obtener la información del agente logueado' });
+    }
+});
+
+
 
 // Middleware para servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, 'src')));

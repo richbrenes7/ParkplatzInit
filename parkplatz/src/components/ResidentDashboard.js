@@ -22,8 +22,15 @@ const ResidentDashboard = () => {
 
     // Obtener el nombre del residente desde localStorage
     const nameResident = localStorage.getItem('nameResident');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
+        if (!token || !nameResident) {
+            // Si no hay token o nombre de residente en localStorage, redirige al login
+            navigate('/login');
+            return;
+        }
+
         const fetchResidentData = async () => {
             try {
                 const response = await axiosInstance.post('/residents/loggedin', { nameResident });
@@ -39,7 +46,7 @@ const ResidentDashboard = () => {
             }
         };
         fetchResidentData();
-    }, [nameResident]);
+    }, [nameResident, token, navigate]);
 
     useEffect(() => {
         const fetchVisits = async () => {
@@ -114,10 +121,10 @@ const ResidentDashboard = () => {
             console.error('Error scheduling visit:', error);
         }
     };
-    
 
     const handleLogout = () => {
         localStorage.removeItem('nameResident');
+        localStorage.removeItem('token');
         navigate('/login'); 
     };
 

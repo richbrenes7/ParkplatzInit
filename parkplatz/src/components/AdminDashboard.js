@@ -25,12 +25,17 @@ function AdminDashboard() {
   const [editingResidentId, setEditingResidentId] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
-
+  // Verificar autenticación y rol de administrador
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+
+    if (!token || role !== 'Administrador') {
+      navigate('/login'); // Redirigir a la página de login si no está autenticado o no es administrador
+      return;
+    }
+
+    // Si está autenticado y es administrador, cargar los datos
     axios.get('/api/admin/users')
       .then(response => {
         if (Array.isArray(response.data)) {
@@ -61,7 +66,13 @@ function AdminDashboard() {
         console.error('Error fetching apartments:', error);
         setApartments([]);
       });
-  }, []);
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    navigate('/login');
+  };
 
   const handleAddUser = () => {
     if (role === 'Residente' && !manualApartment && !selectedApartment) {

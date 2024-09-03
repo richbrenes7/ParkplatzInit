@@ -1,54 +1,105 @@
+/* Login.css */
+
 .login-container {
-    background-color: #EAF2E3;
-    border-radius: 10px;
-    padding: 40px;
-    width: 300px;
-    margin: 100px auto;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .login-container h2 {
-    text-align: center;
-    color: #0C6A5C;
-    margin-bottom: 20px;
-    font-size: 24px;
-  }
-  
-  .login-container input[type="text"],
-  .login-container input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 2px solid #0C6A5C;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-  
-  .login-container button {
-    width: 100%;
-    background-color: #0C6A5C;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .login-container button:hover {
-    background-color: #095044;
-  }
-  
-  .login-container a {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    color: #6A2D83;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  .login-container a:hover {
-    text-decoration: underline;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #AACA97; /* Fondo de tu página */
+  background-image: url('D:/AWS_Script/parkplatz/parkplatz/public/img/fondo2.jpg'); /* Imagen de fondo */
+  background-size: cover;
+  background-position: center;
+}
+
+.login-box {
+  width: 400px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1); /* Fondo semitransparente para el contenedor */
+  box-shadow: 4px 6px 11px 0px rgba(0, 0, 0, 0.54); /* Mantener sombra */
+  border-radius: 10px; /* Bordes redondeados */
+  backdrop-filter: blur(10px); /* Efecto de desenfoque de fondo */
+  text-align: center; /* Centra el contenido dentro del contenedor */
+  font-family: 'Arial', sans-serif; /* Tipografía consistente */
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #169F85; /* Color de texto */
+  font-weight: bold;
+  font-family: 'Arial', sans-serif; /* Asegura que la tipografía sea la misma */
+}
+
+.login-input {
+  width: 100%;
+  padding: 14px 20px;
+  margin: 5px auto; /* Cambiado a auto para centrar los elementos horizontalmente */
+  border: 1px solid #020202;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+  color: #020202;
+  font-family: 'Arial', sans-serif; /* Tipografía consistente */
+}
+
+
+.login-input::placeholder {
+  color: #555; /* Color del texto del placeholder */
+  font-family: 'Arial', sans-serif; /* Tipografía consistente */
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background-color: #169F85;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-family: 'Arial', sans-serif; /* Tipografía consistente */
+}
+
+.login-button:hover {
+  background-color: #0d7f67;
+  transform: translateY(-2px);
+}
+
+.forgot-password-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.forgot-password-link a {
+  color: #169F85;
+  text-decoration: none;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif; /* Tipografía consistente */
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos adicionales para botones */
+.change-method-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: transparent;
+  color: #169F85;
+  border: 2px solid #169F85;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Arial', sans-serif; /* Tipografía consistente */
+}
+
+.change-method-button:hover {
+  background-color: #169F85;
+  color: white;
+}

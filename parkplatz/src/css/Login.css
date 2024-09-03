@@ -1,48 +1,96 @@
 /* Login.css */
 
 .login-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #AACA97;
-  }
-  
-  .login-box {
-    width: 400px;
-    padding: 40px;
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 4px 6px 11px 0px rgba(0, 0, 0, 0.54);
-    border-radius: 8px;
-  }
-  
-  .login-title {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 24px;
-    color: #169F85;
-  }
-  
-  .login-input {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    border: 1px solid #020202;
-    border-radius: 4px;
-  }
-  
-  .login-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 20px;
-    background-color: #169F85;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .login-button:hover {
-    background-color: #0d7f67;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #AACA97; /* Fondo de tu página */
+  background-image: url('ruta_a_tu_imagen_de_fondo.jpg'); /* Puedes agregar una imagen de fondo si lo deseas */
+  background-size: cover;
+  background-position: center;
+}
+
+.login-box {
+  width: 400px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1); /* Fondo semitransparente para el contenedor */
+  box-shadow: 4px 6px 11px 0px rgba(0, 0, 0, 0.54); /* Mantener sombra */
+  border-radius: 10px; /* Bordes redondeados */
+  backdrop-filter: blur(10px); /* Efecto de desenfoque de fondo */
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #169F85; /* Color de texto */
+  font-weight: bold;
+}
+
+.login-input {
+  width: 100%;
+  padding: 14px 20px;
+  margin: 10px 0;
+  border: 1px solid #020202;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+  color: #020202;
+}
+
+.login-input::placeholder {
+  color: #555; /* Color del texto del placeholder */
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background-color: #169F85;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0d7f67;
+  transform: translateY(-2px);
+}
+
+.forgot-password-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.forgot-password-link a {
+  color: #169F85;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos adicionales para botones */
+.change-method-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: transparent;
+  color: #169F85;
+  border: 2px solid #169F85;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.change-method-button:hover {
+  background-color: #169F85;
+  color: white;
+}

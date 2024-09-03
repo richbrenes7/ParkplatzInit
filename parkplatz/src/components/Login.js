@@ -17,28 +17,33 @@ function Login() {
                 setError('Por favor, ingresa el nombre de usuario y la contraseña');
                 return;
             }
-
+    
             const response = await axios.post('/api/login', { username: username.trim(), password });
-
+    
             if (response.data && response.data.token && response.data.role) {
                 const { token, role } = response.data;
-
-                // Almacena el nombre del residente y el token en localStorage
-                localStorage.setItem('nameResident', username.trim());
+    
+                // Almacena el token y el rol en localStorage
                 localStorage.setItem('token', token);
-
-                // Redirigir según el rol
+                localStorage.setItem('role', role);
+    
+                // Almacena el nombre del usuario en localStorage según el rol
                 switch (role) {
                     case 'Administrador':
+                        localStorage.setItem('nameAdmin', username.trim());
                         navigate('/admin-dashboard');
                         break;
                     case 'Residente':
+                        localStorage.setItem('nameResident', username.trim());
                         navigate('/resident-dashboard');
                         break;
                     case 'Agente':
+                        localStorage.setItem('nameAgent', username.trim());
+                        console.log('nameAgent almacenado en localStorage:', localStorage.getItem('nameAgent'));
                         navigate('/agent-dashboard');
                         break;
                     default:
+                        localStorage.setItem('nameUser', username.trim());
                         navigate('/user-dashboard');
                         break;
                 }
@@ -50,7 +55,7 @@ function Login() {
             setError('Credenciales inválidas o error en el servidor');
         }
     };
-
+    
     return (
         <div className="login-container">
             <div className="login-box">

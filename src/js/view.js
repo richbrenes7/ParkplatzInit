@@ -63,47 +63,76 @@ window.view.captureAndValidate = () => {
   document.getElementById('newCapture').style.display = 'block';
 
   snapshotCanvas.toBlob((blob) => {
-      const formData = new FormData();
-      formData.append('file', blob, 'visitor-document.png');
+    const formData = new FormData();
+    formData.append('file', blob, 'visitor-document.png');
 
-      fetch('http://localhost:8081/upload', {
-          method: 'POST',
-          body: formData,
-      })
-      .then(response => response.json())
-      .then(data => {
-          console.log('Datos recibidos tras subir la imagen:', data);
-          return fetch(`http://localhost:8081/api/validateDPI?dpi=${data.dpi}`, {
-              method: 'GET'
-          });
-      })
-      .then(response => response.json())
-      .then(validationData => {
-          console.log('Datos de validación recibidos:', validationData);
-          if (validationData.status === 'accepted') {
-              const visitorName = validationData.visitor_name;
-              alert(`Visita aceptada exitosamente para: ${visitorName}. Bienvenido!`);
-              
-              // Limpiar los campos de entrada
-              window.view.clearVisitorFields();
+    fetch('http://localhost:8081/upload', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error en la subida de la imagen al servidor.');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Datos recibidos tras subir la imagen:', data);
 
-              // Restablecer el estado de la captura
-              window.view.resetCapture();
-              window.controller.performCapture();
-          } else if (validationData.status === 'not_found') {
-              console.log('No se encontró ninguna visita pendiente');
-              alert('No se encontró ninguna visita pendiente. Complete los datos del visitante.');
-              document.getElementById('visitorData').style.display = 'block';
-              document.getElementById('btnDataVisitor').style.display = 'block';
-          } else {
-              console.error('Unexpected status received:', validationData.status);
-              alert('Ocurrió un error inesperado.');
-          }
-      })
-      .catch((error) => {
-          console.error('Error durante la subida de la imagen o la validación del DPI:', error);
-          alert('Error al subir la imagen o al validar el DPI.');
+      // Si la respuesta no contiene un estado de éxito, manejarlo adecuadamente
+      if (data.status !== 'success') {
+        throw new Error(`Error: ${data.message}`);
+      }
+
+      const dpi = data.dpi;  // Obtener el DPI que se capturó y pasó desde el backend
+
+      // Verificar que el DPI haya sido devuelto
+      if (!dpi) {
+        throw new Error('DPI no encontrado en la respuesta.');
+      }
+
+      return fetch(`http://localhost:8081/api/validateDPI?dpi=${dpi}`, {
+        method: 'GET'
       });
+    })
+    .then(response => response.json())
+    .then(validationData => {
+      console.log('Datos de validación recibidos:', validationData);
+
+      // Verifica el estado de la visita después de la espera
+      if (validationData.status === 'accepted') {
+          const visitorName = validationData.visitor_name || 'visitante';
+          alert(`Visita aceptada exitosamente para: ${visitorName}. Bienvenido!`);
+          
+          // Limpiar los campos de entrada y reiniciar la captura
+          window.view.clearVisitorFields();
+          window.view.resetCapture();
+
+          // Detenemos aquí el flujo para evitar más validaciones
+          return; 
+      }
+
+      // Si no es aceptada, manejar otros estados posibles
+      switch (validationData.status) {
+        case 'Pendiente':
+          alert('La visita aún está pendiente. Por favor, espere la confirmación.');
+          break;
+        case 'Rechazada':
+          alert('La visita fue rechazada.');
+          break;
+        case 'not_found':
+          alert('No se encontró ninguna visita pendiente. Complete los datos del visitante.');
+          document.getElementById('visitorData').style.display = 'block';
+          document.getElementById('btnDataVisitor').style.display = 'block';
+          break;
+        default:
+          throw new Error(`Estado inesperado: ${validationData.status}`);
+      }
+    })
+    .catch((error) => {
+      console.error('Error durante la validación del estado:', error);
+      alert(`Error al validar el estado de la visita: ${error.message}`);
+    });
   });
 };
 
@@ -134,7 +163,6 @@ window.view.captureImage = () => {
 
     context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
-    // Ocultar el video y mostrar la imagen capturada
     player.style.display = 'none';
     snapshotCanvas.style.display = 'block';
     document.getElementById('upload').style.display = 'block';
@@ -156,30 +184,15 @@ window.view.uploadImage = () => {
           console.log('Image uploaded successfully:', data);
           alert('Imagen subida con éxito');
 
-          // Validar el DPI después de subir la imagen
-          return fetch(`http://localhost:8081/api/validateDPI?dpi=${data.dpi}`, {
-              method: 'GET'
-          });
-      })
-      .then(response => response.json())
-      .then(validationData => {
-          if (validationData.status === 'found') {
-              console.log('Visita encontrada:', validationData.visitor);
-              alert('Visita pendiente encontrada. Se cambiará el estado a Aceptada.');
-              // Aquí puedes hacer algo adicional si la visita fue encontrada
-          } else {
-              console.log('No se encontró ninguna visita pendiente');
-              alert('No se encontró ninguna visita pendiente.');
-              // Aquí puedes habilitar los campos para el registro manual
-          }
+          // Verificar el estado de la visita después de subir la imagen
+          window.view.checkVisitStatus();
       })
       .catch((error) => {
-          console.error('Error durante la validación del DPI:', error);
-          alert('Error al validar el DPI.');
+          console.error('Error durante la subida de la imagen:', error);
+          alert('Error al subir la imagen.');
       });
   });
 };
-
 
 // Escritura de datos de residentes 
 window.view.resident = () => {
@@ -264,7 +277,7 @@ window.view.photoVisitModal = (image) => {
             </button>
           </div>
           <div class="modal-body">
-            <img src="${image}" class="img-fluid imgStyle" alt="Fotografia Visitante"> <!-- Verifica que src="${image}" sea correcto -->
+            <img src="${image}" class="img-fluid imgStyle" alt="Fotografia Visitante">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-warning text-white shadowStyle" data-dismiss="modal">Cerrar</button>
@@ -275,7 +288,6 @@ window.view.photoVisitModal = (image) => {
 };
 
 // Agrega los residentes de un departamento
-// Método para agregar residentes de un departamento
 window.view.insertResident = (dataRes) => {
   let divInsertResident = document.getElementById('insertResident');
   divInsertResident.innerHTML = `
