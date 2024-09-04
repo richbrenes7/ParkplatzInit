@@ -43,12 +43,38 @@ window.view.visitor = () => {
               <button class="p-3 mt-2 btn btn-warning text-white shadowStyle" id="btnDataVisitor" style="display: none;" onclick="window.controller.dataInformationVisitor()">Agregar</button>
             </div>
           </div>
+          <!-- Botón para abrir el mapa con las coordenadas -->
+          <div class="row justify-content-center">
+            <button class="btn btn-primary mt-3" id="btnVerMapa">Ver mapa</button>
+          </div>
         </div> 
       </div>
     </div>`;
 
   // Llamar a performCapture después de que la vista ha sido renderizada
   window.controller.performCapture();
+
+  // Agregar el evento para abrir el mapa al hacer clic en el botón
+  document.getElementById('btnVerMapa').addEventListener('click', window.view.abrirMapa);
+};
+
+// Coordenadas del parqueo de visitas
+const latitudParqueo = 14.681037;
+const longitudParqueo = -90.482773;
+
+window.view.abrirMapa = () => {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  
+  // Crear la URL para abrir Google Maps o Apple Maps
+  let urlMapa;
+  if (isIOS) {
+    urlMapa = `http://maps.apple.com/?ll=${latitudParqueo},${longitudParqueo}`;
+  } else {
+    urlMapa = `https://www.google.com/maps?q=${latitudParqueo},${longitudParqueo}`;
+  }
+
+  // Abrir la aplicación de mapas
+  window.open(urlMapa, '_blank');
 };
 
 window.view.captureAndValidate = () => {

@@ -6,7 +6,7 @@
   justify-content: center;
   height: 100vh;
   background-color: #AACA97; /* Fondo de tu página */
-  background-image: url('D:\Documents\Nueva carpeta\ParkplatzInit\parkplatz\public\img\fondo2.jpg'); /* Imagen de fondo */
+  background-image: url('D:\AWS_Script\parkplatz\parkplatz\public\img\fondo2.jpg'); /* Imagen de fondo */
   background-size: cover;
   background-position: center;
 }

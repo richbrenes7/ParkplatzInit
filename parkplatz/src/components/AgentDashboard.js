@@ -5,9 +5,9 @@ import '../styles/Dashboard.css';
 
 const AgentDashboard = () => {
     const [visits, setVisits] = useState([]);
-    const [residents, setResidents] = useState([]); // Estado para almacenar la información de los residentes
-    const [apartmentNumber, setApartmentNumber] = useState(''); // Estado para el número de apartamento
-    const [selectedFilter, setSelectedFilter] = useState('hoy'); // Estado para el filtro de reportes
+    const [residents, setResidents] = useState([]);
+    const [apartmentNumber, setApartmentNumber] = useState('');
+    const [selectedFilter, setSelectedFilter] = useState('hoy');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,6 +26,7 @@ const AgentDashboard = () => {
     const fetchResidents = async () => {
         if (!apartmentNumber) {
             alert('Por favor, ingresa un número de apartamento.');
+            setResidents([]); // Limpia los residentes si no se ingresa un número de apartamento
             return;
         }
 
@@ -39,15 +40,15 @@ const AgentDashboard = () => {
             const doc = await response.json();
             if (doc && doc.length > 0) {
                 console.log('Resident data:', doc);
-                setResidents(doc); // Inserta los residentes encontrados en el estado
+                setResidents(doc);
             } else {
                 console.log('No se encontró el documento!');
-                setResidents([]); // Limpia los residentes si no se encuentran resultados
+                setResidents([]);
             }
         } catch (error) {
             console.log('Error getting resident data:', error);
             alert('Hubo un problema al obtener los datos del residente. Por favor, inténtalo de nuevo.');
-            setResidents([]); // Limpia los residentes en caso de error
+            setResidents([]);
         }
     };
 
@@ -66,7 +67,36 @@ const AgentDashboard = () => {
             return true;
         });
 
-        console.log('Reporte generado:', filteredVisits);
+        if (filteredVisits.length === 0) {
+            alert('No hay visitas registradas para el período seleccionado.');
+            return;
+        }
+
+        // Generar CSV
+        const headers = ["Depto", "Nombre Visitante", "DPI", "N° Acompañantes", "Fecha", "Hora", "Estado"];
+        const rows = filteredVisits.map(visit => [
+            visit.numberDept,
+            visit.name,
+            visit.dpi,
+            visit.companions,
+            new Date(visit.date).toLocaleDateString('es-CL'),
+            new Date(visit.date).toLocaleTimeString('es-CL'),
+            visit.status
+        ]);
+
+        let csvContent = headers.join(",") + "\n" + rows.map(row => row.join(",")).join("\n");
+
+        // Descargar el CSV
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'reporte_visitas.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        console.log('Reporte generado y descargado:', filteredVisits);
     };
 
     const handleLogout = () => {
@@ -94,7 +124,6 @@ const AgentDashboard = () => {
                                 <th className="text-center text-white lead">Fecha</th>
                                 <th className="text-center text-white lead">Hora</th>
                                 <th className="text-center text-white lead">Estado</th>
-                                <th className="text-center text-white lead">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,14 +137,11 @@ const AgentDashboard = () => {
                                         <td className="text-center">{new Date(visit.date).toLocaleDateString('es-CL')}</td>
                                         <td className="text-center">{new Date(visit.date).toLocaleTimeString('es-CL')}</td>
                                         <td className="text-center">{visit.status}</td>
-                                        <td className="text-center">
-                                            {/* Agrega las acciones necesarias */}
-                                        </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="8" className="text-center">No hay visitas registradas</td>
+                                    <td colSpan="7" className="text-center">No hay visitas registradas</td>
                                 </tr>
                             )}
                         </tbody>

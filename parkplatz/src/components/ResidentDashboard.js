@@ -136,6 +136,36 @@ const ResidentDashboard = () => {
         setModalImage(null); // Cierra el modal
     };
 
+    // Función para convertir un array de objetos a formato CSV
+    const generateCSV = (visits) => {
+        const headers = ["Depto a visitar", "Nombre Visitante", "DPI", "N° Acompañantes", "Fecha", "Hora", "Estado"];
+        const rows = visits.map(visit => [
+            visit.numberDept,
+            visit.name,
+            visit.dpi,
+            visit.companions,
+            new Date(visit.date).toLocaleDateString('es-CL'),
+            new Date(visit.date).toLocaleTimeString('es-CL'),
+            visit.status
+        ]);
+
+        // Convertir el array a CSV
+        let csvContent = headers.join(",") + "\n" + rows.map(row => row.join(",")).join("\n");
+        return csvContent;
+    };
+
+    // Función para descargar el CSV
+    const downloadCSV = (csvContent) => {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'reporte_visitas.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="dashboard-container">
             <div className="welcome-panel">
@@ -195,6 +225,15 @@ const ResidentDashboard = () => {
                         </tbody>
                     </table>
                 </div>
+                <button
+                    className="dashboard-button"
+                    onClick={() => {
+                        const csvContent = generateCSV(visits);
+                        downloadCSV(csvContent);
+                    }}
+                >
+                    Generar Reporte CSV
+                </button>
             </div>
 
             <div className="dashboard-content">

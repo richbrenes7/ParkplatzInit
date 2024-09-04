@@ -77,3 +77,63 @@
 .search-box {
   margin-bottom: 20px;
 }
+
+/* Estilo para las tablas */
+.tableStyle {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+.tableStyle th, .tableStyle td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.tableStyle thead th {
+  background-color: #169F85;
+  color: white;
+  text-transform: uppercase;
+}
+
+.tableStyle tbody tr {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+.tableStyle tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.tableStyle tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilo para celdas de tabla con datos centrados */
+.tableStyle td {
+  text-align: center;
+}
+
+/* Estilo para botones dentro de las tablas */
+.tableStyle button {
+  padding: 8px 16px;
+  background-color: #169F85;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tableStyle button:hover {
+  background-color: #0d7f67;
+}
+
+/* Estilo para las celdas de la tabla con acciones */
+.tableStyle td .actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
