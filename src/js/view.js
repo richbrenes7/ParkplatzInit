@@ -15,26 +15,24 @@ window.view.visitor = () => {
             <input type="text" id="toWhoVisitor" placeholder="Ingrese departamento" required>
             <div id="insertResident"></div>
           </div>
-          <div>
-            <div class="row justify-content-center">
-              <button class="button-photo p-3 mt-2 mb-2 btn btn-warning text-white shadowStyle" id="btnSearchResidentVisitor" onclick="window.controller.infoResident()">Mostrar residentes</button>
-            </div>
+          <!--Campo de entrada para el DPI del visitante, este será visible solo si no se ha encontrado la visita-->
+          <div class="container" id="manualDPIContainer" style="display: none;">
+            <label for="rutVisitor" class="mt-2 colorTextLabel">DPI del Visitante</label>
+            <input type="text" id="rutVisitor" placeholder="Ingrese el DPI" required>
           </div>
-          <div id="containerModal"></div>
           <!--Foto del visitante-->
           <div class="row justify-content-center">
-              <video class="mt-2" id="player" width=320 height=240 autoplay></video>
-              <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240 style="display: none;"></canvas>
+            <video class="mt-2" id="player" width=320 height=240 autoplay></video>
+            <canvas class="mt-2 mb-2" id="snapshot" width=320 height=240 style="display: none;"></canvas>
           </div>
           <div class="row justify-content-center">
-              <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture" onclick="window.view.captureAndValidate()">Sacar foto y Validar</button>
-              <button class="ml-1 btn btn-warning text-white shadowStyle" id="newCapture" style="display: none;" onclick="window.view.resetCapture()">Otra Foto</button>
+            <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture" onclick="window.view.captureAndValidate()">Sacar foto y Validar</button>
+            <button class="ml-1 btn btn-warning text-white shadowStyle" id="newCapture" style="display: none;" onclick="window.view.resetCapture()">Otra Foto</button>
           </div>
           <!--Datos del visitante que se mostrarán solo si no hay visitas programadas-->
           <div class="container" id="visitorData" style="display: none;">
             <label for="nameVisitor" class="mt-2 colorTextLabel">Nombre del visitante</label>
             <input type="text" id="nameVisitor" placeholder="Nombre Visitante" required>
-
             <label for="numCompanionsVisitor" class="colorTextLabel">Número de acompañantes</label>
             <input type="text" id="numCompanionsVisitor" placeholder="Número" required>
           </div>
@@ -43,20 +41,17 @@ window.view.visitor = () => {
               <button class="p-3 mt-2 btn btn-warning text-white shadowStyle" id="btnDataVisitor" style="display: none;" onclick="window.controller.dataInformationVisitor()">Agregar</button>
             </div>
           </div>
-          <!-- Botón para abrir el mapa con las coordenadas -->
-          <div class="row justify-content-center">
-            <button class="btn btn-primary mt-3" id="btnVerMapa">Ver mapa</button>
-          </div>
         </div> 
       </div>
     </div>`;
 
-  // Llamar a performCapture después de que la vista ha sido renderizada
   window.controller.performCapture();
 
-  // Agregar el evento para abrir el mapa al hacer clic en el botón
-  document.getElementById('btnVerMapa').addEventListener('click', window.view.abrirMapa);
+  if (document.getElementById('btnVerMapa')) {
+    document.getElementById('btnVerMapa').addEventListener('click', window.view.abrirMapa);
+  }
 };
+
 
 // Coordenadas del parqueo de visitas
 const latitudParqueo = 14.681037;
@@ -77,6 +72,7 @@ window.view.abrirMapa = () => {
   window.open(urlMapa, '_blank');
 };
 
+// Muestra la imagen capturada correctamente
 window.view.captureAndValidate = () => {
   const player = document.getElementById('player');
   const snapshotCanvas = document.getElementById('snapshot');
@@ -90,77 +86,71 @@ window.view.captureAndValidate = () => {
 
   snapshotCanvas.toBlob((blob) => {
     const formData = new FormData();
-    formData.append('file', blob, 'visitor-document.png');
+    formData.append('file', blob, 'visitor-document.png'); // Asegúrate de que el nombre del archivo sea correcto
 
-    fetch('http://localhost:8081/upload', {
+    fetch('http://localhost:8081/upload', {  // Asegúrate de que la URL sea correcta
       method: 'POST',
       body: formData,
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Error en la subida de la imagen al servidor.');
+        throw new Error('Failed to upload image');  // Si la respuesta no es OK, lanza un error
       }
       return response.json();
     })
     .then(data => {
       console.log('Datos recibidos tras subir la imagen:', data);
 
-      // Si la respuesta no contiene un estado de éxito, manejarlo adecuadamente
       if (data.status !== 'success') {
         throw new Error(`Error: ${data.message}`);
       }
 
       const dpi = data.dpi;  // Obtener el DPI que se capturó y pasó desde el backend
+      if (!dpi) throw new Error('DPI no encontrado en la respuesta.');
 
-      // Verificar que el DPI haya sido devuelto
-      if (!dpi) {
-        throw new Error('DPI no encontrado en la respuesta.');
+      // Mostrar la imagen capturada
+      const dpiImage = document.getElementById('dpiImage');
+      if (dpiImage) {
+        dpiImage.src = URL.createObjectURL(blob); // Mostrar la imagen capturada
+        document.getElementById('showCapturedDPI').style.display = 'block'; // Mostrar la imagen capturada
       }
 
       return fetch(`http://localhost:8081/api/validateDPI?dpi=${dpi}`, {
-        method: 'GET'
+        method: 'GET',
       });
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to validate DPI');  // Si la validación falla
+      }
+      return response.json();
+    })
     .then(validationData => {
       console.log('Datos de validación recibidos:', validationData);
 
-      // Verifica el estado de la visita después de la espera
       if (validationData.status === 'accepted') {
-          const visitorName = validationData.visitor_name || 'visitante';
-          alert(`Visita aceptada exitosamente para: ${visitorName}. Bienvenido!`);
-          
-          // Limpiar los campos de entrada y reiniciar la captura
-          window.view.clearVisitorFields();
-          window.view.resetCapture();
-
-          // Detenemos aquí el flujo para evitar más validaciones
-          return; 
-      }
-
-      // Si no es aceptada, manejar otros estados posibles
-      switch (validationData.status) {
-        case 'Pendiente':
-          alert('La visita aún está pendiente. Por favor, espere la confirmación.');
-          break;
-        case 'Rechazada':
-          alert('La visita fue rechazada.');
-          break;
-        case 'not_found':
-          alert('No se encontró ninguna visita pendiente. Complete los datos del visitante.');
-          document.getElementById('visitorData').style.display = 'block';
-          document.getElementById('btnDataVisitor').style.display = 'block';
-          break;
-        default:
-          throw new Error(`Estado inesperado: ${validationData.status}`);
+        alert(`Visita aceptada exitosamente para: ${validationData.visitor_name}.`);
+        window.view.clearVisitorFields();
+        window.view.resetCapture();
+        document.getElementById('btnVerMapa').style.display = 'block';
+      } else if (validationData.status === 'not_found') {
+        alert('No se encontró ninguna visita pendiente. Complete los datos.');
+        document.getElementById('manualDPIContainer').style.display = 'block'; // Mostrar campo para DPI manual
+        document.getElementById('visitorData').style.display = 'block';
+        document.getElementById('btnDataVisitor').style.display = 'block';
+      } else if (validationData.status === 'Pendiente') {
+        alert('La visita está pendiente.');
+      } else if (validationData.status === 'Rechazada') {
+        alert('La visita fue rechazada.');
       }
     })
-    .catch((error) => {
-      console.error('Error durante la validación del estado:', error);
-      alert(`Error al validar el estado de la visita: ${error.message}`);
+    .catch(error => {
+      console.error('Error al validar el estado:', error);
+      alert(`Error: ${error.message}`);
     });
-  });
+  }, 'image/png'); // Asegúrate de que el formato de la imagen sea 'image/png'
 };
+
 
 // Método para reiniciar la captura
 window.view.resetCapture = () => {
@@ -172,12 +162,15 @@ window.view.resetCapture = () => {
   document.getElementById('newCapture').style.display = 'none';
   document.getElementById('visitorData').style.display = 'none';
   document.getElementById('btnDataVisitor').style.display = 'none';
+  document.getElementById('manualDPIContainer').style.display = 'none'; // Ocultar al reiniciar
+  document.getElementById('showCapturedDPI').style.display = 'none'; // Ocultar imagen capturada al reiniciar
 };
 
 // Método para limpiar campos del formulario de visitante
 window.view.clearVisitorFields = () => {
   document.getElementById('toWhoVisitor').value = '';
   document.getElementById('nameVisitor').value = '';
+  document.getElementById('dpiVisitor').value = ''; // Agregado para limpiar el DPI manual
   document.getElementById('numCompanionsVisitor').value = '';
 };
 
