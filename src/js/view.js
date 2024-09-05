@@ -28,6 +28,7 @@ window.view.visitor = () => {
           <div class="row justify-content-center">
             <button class="mr-1 btn btn-warning text-white shadowStyle" id="capture" onclick="window.view.captureAndValidate()">Sacar foto y Validar</button>
             <button class="ml-1 btn btn-warning text-white shadowStyle" id="newCapture" style="display: none;" onclick="window.view.resetCapture()">Otra Foto</button>
+            <button id="btnVerMapa" style="display: none;" class="btn btn-warning">Ir al parqueo</button>
           </div>
           <!--Datos del visitante que se mostrarán solo si no hay visitas programadas-->
           <div class="container" id="visitorData" style="display: none;">
@@ -132,7 +133,14 @@ window.view.captureAndValidate = () => {
         alert(`Visita aceptada exitosamente para: ${validationData.visitor_name}.`);
         window.view.clearVisitorFields();
         window.view.resetCapture();
-        document.getElementById('btnVerMapa').style.display = 'block';
+
+        const btnVerMapa = document.getElementById('btnVerMapa');
+        if (btnVerMapa) {
+          console.log('btnVerMapa found, showing the button.');  // Debugging step
+          btnVerMapa.style.display = 'block';
+        } else {
+          console.warn('btnVerMapa element not found in DOM');  // Debugging step
+        }
       } else if (validationData.status === 'not_found') {
         alert('No se encontró ninguna visita pendiente. Complete los datos.');
         document.getElementById('manualDPIContainer').style.display = 'block'; // Mostrar campo para DPI manual
@@ -152,27 +160,44 @@ window.view.captureAndValidate = () => {
 };
 
 
+
 // Método para reiniciar la captura
 window.view.resetCapture = () => {
   const player = document.getElementById('player');
   const snapshotCanvas = document.getElementById('snapshot');
+  const newCapture = document.getElementById('newCapture');
+  const visitorData = document.getElementById('visitorData');
+  const btnDataVisitor = document.getElementById('btnDataVisitor');
+  const manualDPIContainer = document.getElementById('manualDPIContainer');
+  const showCapturedDPI = document.getElementById('showCapturedDPI');
 
-  player.style.display = 'block';
-  snapshotCanvas.style.display = 'none';
-  document.getElementById('newCapture').style.display = 'none';
-  document.getElementById('visitorData').style.display = 'none';
-  document.getElementById('btnDataVisitor').style.display = 'none';
-  document.getElementById('manualDPIContainer').style.display = 'none'; // Ocultar al reiniciar
-  document.getElementById('showCapturedDPI').style.display = 'none'; // Ocultar imagen capturada al reiniciar
+  // Only access the style if the element exists
+  if (player) player.style.display = 'block';
+  if (snapshotCanvas) snapshotCanvas.style.display = 'none';
+  if (newCapture) newCapture.style.display = 'none';
+  if (visitorData) visitorData.style.display = 'none';
+  if (btnDataVisitor) btnDataVisitor.style.display = 'none';
+  if (manualDPIContainer) manualDPIContainer.style.display = 'none';
+  if (showCapturedDPI) showCapturedDPI.style.display = 'none';
+
+  // Restart the camera stream
+  window.controller.performCapture();
 };
 
 // Método para limpiar campos del formulario de visitante
 window.view.clearVisitorFields = () => {
-  document.getElementById('toWhoVisitor').value = '';
-  document.getElementById('nameVisitor').value = '';
-  document.getElementById('dpiVisitor').value = ''; // Agregado para limpiar el DPI manual
-  document.getElementById('numCompanionsVisitor').value = '';
+  const toWhoVisitor = document.getElementById('toWhoVisitor');
+  const nameVisitor = document.getElementById('nameVisitor');
+  const rutVisitor = document.getElementById('rutVisitor'); // Corrected the DPI field ID to 'rutVisitor'
+  const numCompanionsVisitor = document.getElementById('numCompanionsVisitor');
+
+  // Only set the value if the element exists
+  if (toWhoVisitor) toWhoVisitor.value = '';
+  if (nameVisitor) nameVisitor.value = '';
+  if (rutVisitor) rutVisitor.value = ''; // Ensure the element exists before clearing it
+  if (numCompanionsVisitor) numCompanionsVisitor.value = '';
 };
+
 
 // Método para capturar la imagen
 window.view.captureImage = () => {
@@ -259,6 +284,9 @@ window.view.listVisitors = () => {
       const date = new Date(data.date).toLocaleDateString('es-CL');
       const hour = new Date(data.date).toLocaleTimeString('es-CL');
 
+      // Modifica la URL de la imagen para que apunte a la carpeta "procesados"
+      const processedImageUrl = `https://storage.googleapis.com/parkplatz-transform/procesados/${data.image.split('/').pop()}`;
+
       htmlListVisitors += `
       <tbody>
       <tr>
@@ -268,7 +296,7 @@ window.view.listVisitors = () => {
       <td class="text-center">${data.companions}</td>
       <td class="text-center">${date}</td>
       <td class="text-center">${hour}</td>
-      <td class="text-center"><button class="btn btn-warning text-white shadowStyle" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${data.image}')">Ver</button></td>
+      <td class="text-center"><button class="btn btn-warning text-white shadowStyle" data-toggle="modal" data-target="#exampleModalPhoto" onclick="window.view.photoVisitModal('${processedImageUrl}')">Ver</button></td>
       <td class="text-center">${data.status}</td>
       <td class="text-center">
         <button class="btn btn-success text-white shadowStyle" onclick="window.controller.updateVisitorStatus('${data._id}', 'Aceptada')">Aceptar</button>
@@ -305,6 +333,7 @@ window.view.photoVisitModal = (image) => {
       </div>
     </div>`;
 };
+
 
 // Agrega los residentes de un departamento
 window.view.insertResident = (dataRes) => {

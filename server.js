@@ -141,10 +141,10 @@ app.post('/api/visitors', async (req, res) => {
 
         // Subir la imagen al bucket de Google Cloud
         // Cambia esta línea para generar un nombre de archivo más corto
-        const fileName = `visitor_${Date.now()}.png`; // Nombre del archivo reducido
+        const fileName = `visitor_${new Date().toISOString().replace(/[^a-zA-Z0-9]/g, '_')}.png`;
         const buffer = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         const file = storage.bucket(bucketName).file(fileName);
-
+        
         await file.save(buffer, {
             metadata: { contentType: 'image/png' },
         });
@@ -353,7 +353,7 @@ const upload = multer({
 // Ruta para manejar la subida de la imagen
 app.post('/upload', upload.single('file'), async (req, res) => {
     try {
-        const fileName = `visitor_${Date.now()}.png`; // Nombre del archivo reducido
+        const fileName = `visitor_${new Date().toISOString().replace(/[^a-zA-Z0-9]/g, '_')}.png`;
         const blob = bucket.file(fileName);
         const blobStream = blob.createWriteStream({
             resumable: false,

@@ -128,9 +128,19 @@ const ResidentDashboard = () => {
         navigate('/login'); 
     };
 
+    // Esta función abre el modal con la imagen desde la ruta 'procesados'
     const handleViewPhoto = (image) => {
-        setModalImage(image); // Abre el modal con la imagen seleccionada
+        // Extraer solo el nombre del archivo de la URL completa
+        const imageName = image.split('/').pop(); // Obtener la última parte del string (el nombre del archivo)
+        
+        // Construir la nueva URL en la carpeta 'procesados'
+        const imageUrl = `https://storage.googleapis.com/parkplatz-transform/procesados/${imageName}`;
+    
+        // Abrir el modal con la imagen procesada
+        setModalImage(imageUrl); // Abre el modal con la URL completa
     };
+    
+
 
     const closeModal = () => {
         setModalImage(null); // Cierra el modal
@@ -206,7 +216,6 @@ const ResidentDashboard = () => {
                                         <td className="text-center">{visit.companions}</td>
                                         <td className="text-center">{new Date(visit.date).toLocaleDateString('es-CL')}</td>
                                         <td className="text-center">{new Date(visit.date).toLocaleTimeString('es-CL')}</td>
-                                        <td className="text-center">{visit.registeredBy}</td> {/* Campo agregado para mostrar quién registró la visita */}
                                         <td className="text-center">
                                             <button className="btn btn-warning text-white shadowStyle" onClick={() => handleViewPhoto(visit.image)}>Ver</button>
                                         </td>
@@ -223,6 +232,7 @@ const ResidentDashboard = () => {
                                 </tr>
                             )}
                         </tbody>
+
                     </table>
                 </div>
                 <button
